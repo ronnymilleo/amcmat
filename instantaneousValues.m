@@ -2,6 +2,6 @@ function [outputStruct] = instantaneousValues(inputVector, symbolRate, numSample
 instAngle = angle(inputVector);
 instFreq = diff(instAngle)./(2*pi).*(symbolRate*numSamplesPerSymbol);
 instAbs = abs(inputVector);
-centNormAverage = instAbs/mean(instAbs);
-outputStruct = struct('instAngle',instAngle,'instFreq',instFreq,'instAbsValue',instAbs,'centNormAverage',centNormAverage);
+centNormAbs = instAbs/mean(instAbs) - 1;
+outputStruct = struct('instAngle',instAngle,'instFreq',instFreq,'instAbsValue',instAbs,'centNormAbs',centNormAbs);
 end

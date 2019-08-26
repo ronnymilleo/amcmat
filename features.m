@@ -19,11 +19,11 @@ modulationSNR = SNR_vector; % Fazer loop pra testar SNR diferente
 for i = 1:length(modulationSNR)
     for j = 1:Nframes
         if(strcmp(modulation,'QAM4'))
-            inputModulationSignal = QAM4(4096,modulationSNR(i),0);
+            inputModulationSignal = QAM4(4096,modulationSNR(i),0,0);
         elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM16(4096,modulationSNR(i),0);
+            inputModulationSignal = QAM16(4096,modulationSNR(i),0,0);
         elseif(strcmp(modulation,'PSK2'))
-            inputModulationSignal = PSK2(4096,modulationSNR(i),0);
+            inputModulationSignal = PSK2(4096,modulationSNR(i),0,0);
         end
 
         instValuesStruct = instantaneousValues(inputModulationSignal,Rs,1);
@@ -44,16 +44,16 @@ for i = 1:length(modulationSNR)
         feature5(i,j) = Kurt(instValuesStruct.instAbsValue);
 
         %Valor maximo da densidade espectral de potencia da amplitude instantanea normalizada e centralizada
-        feature6(i,j) = Gmax(instValuesStruct.centNormAverage);
+        feature6(i,j) = Gmax(instValuesStruct.centNormAbs);
 
         %Media da amplitude instantanea normalizada centralizada ao quadrado
-        feature7(i,j) = meanSquared(instValuesStruct.centNormAverage);
+        feature7(i,j) = meanSquared(instValuesStruct.centNormAbs);
 
         %Desvio padrao do valor absoluto da amplitude instantanea normalizada e centralizada
-        feature8(i,j) = standardDeviation(abs(instValuesStruct.centNormAverage));
+        feature8(i,j) = standardDeviation(abs(instValuesStruct.centNormAbs));
 
         %Desvio padrao da amplitude instantanea normalizada e centralizada
-        feature9(i,j) = standardDeviation(instValuesStruct.centNormAverage);
+        feature9(i,j) = standardDeviation(instValuesStruct.centNormAbs);
     end
 end
 result = cat(3,feature1,feature2,feature3,feature4,feature5,feature6,feature7,feature8,feature9);

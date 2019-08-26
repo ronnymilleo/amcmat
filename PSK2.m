@@ -1,4 +1,4 @@
-function [dataOut] = PSK2(frameSize,SNR,plotFlag)
+function [dataOut] = PSK2(frameSize,SNR,phaseFlag,plotFlag)
 %% Geração do sinal 2-PSK
 M = 2;                                                      % Tamanho da constelação
 k = log2(M);                                                % Número de bits por símbolo
@@ -17,7 +17,10 @@ dataSymbolsIn = bi2de(dataInMatrix);                        % Conversão para in
 % Aplicação da modulação
 dataMod = pskmod(dataSymbolsIn,M);                          % Modulação usando código gray
 initPhase = pi*(2*rand(1)-1);                               % Fase inicial randômica
-dataMod = dataMod.*exp(1i*initPhase);                       % Aplicação da fase inicial
+
+if(phaseFlag == 1)
+    dataMod = dataMod.*exp(1i*initPhase);                       % Aplicação da fase inicial
+end
 
 % Aplicação do filtro na transmissão do sinal
 txSignal = upfirdn(dataMod,rrcFilter,numSamplesPerSymbol,1);% Sinal transmitido
