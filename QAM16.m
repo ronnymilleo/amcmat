@@ -1,14 +1,15 @@
-%% Geração do sinal 4-QAM
-M = 16;                                                      % Tamanho da constelação
+function [dataOut] = QAM16(frameSize,SNR,plotFlag)
+%% Geração do sinal 16-QAM
+M = 16;                                                     % Tamanho da constelação
 k = log2(M);                                                % Número de bits por símbolo
-n = k*4096;                                                 % Número de bits a processar
+n = k*frameSize;                                            % Número de bits a processar
 numSamplesPerSymbol = 1;                                    % Fator de Oversampling
 span = 10;                                                  % Configuração do filtro
 rolloff = 0.25;                                             % Fator de rolloff do filtro
 rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Criação do filtro
 
 % Configuração da mensagem
-rng default                                                 % Mantém o seed do gerador
+%rng default                                                 % Mantém o seed do gerador
 dataIn = randi([0 1],n,1);                                  % Cria o vetor da mensagem
 dataInMatrix = reshape(dataIn,length(dataIn)/k,k);          % Transformação de vetor em matrix
 dataSymbolsIn = bi2de(dataInMatrix);                        % Conversão para inteiro
@@ -22,7 +23,7 @@ dataMod = dataMod.*exp(1i*initPhase);                       % Aplicação da fas
 txSignal = upfirdn(dataMod,rrcFilter,numSamplesPerSymbol,1);% Sinal transmitido
 
 % SNR e canal
-snr = 20;
+snr = SNR;
 rxSignal = awgn(txSignal, snr, 'measured');                 % Aplicação do ruído do canal
 
 % Filtro no sinal de recepção
@@ -30,16 +31,20 @@ rxFiltSignal = upfirdn(rxSignal,rrcFilter,1,numSamplesPerSymbol);   % Aplicaçã
 rxFiltSignal = rxFiltSignal(span+1:end-span);                       % Retirada do delay do filtro
 
 % Plot
-sPlotFig = scatterplot(rxSignal,1,0,'g.');
-hold on
-scatterplot(dataMod,1,0,'k*',sPlotFig)
+if(plotFlag == 1)
+    sPlotFig = scatterplot(rxSignal,1,0,'g.');
+    hold on
+    scatterplot(dataMod,1,0,'k*',sPlotFig)
+end
 
 % Demodulação
-dataSymbolsOut = qamdemod(rxFiltSignal, M);
-dataOutMatrix = de2bi(dataSymbolsOut,k);
-dataOut = dataOutMatrix(:);                                 % Transformaçao de matrix para vetor
+%dataSymbolsOut = qamdemod(rxFiltSignal, M);
+%dataOutMatrix = de2bi(dataSymbolsOut,k);
+%dataOut = dataOutMatrix(:);                                 % Transformaçao de matrix para vetor
+dataOut = rxFiltSignal;
 
 % Cálculo da taxa de erro
-[numErrors, ber] = biterr(dataIn, dataOut);
-fprintf('\nBER = %5.2e, baseado em %d erros\n', ...
-    ber, numErrors)
+%[numErrors, ber] = biterr(dataIn, dataOut);
+%fprintf('\nBER = %5.2e, baseado em %d erros\n', ...
+%    ber, numErrors)
+end
