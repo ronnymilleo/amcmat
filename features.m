@@ -1,4 +1,4 @@
-function [result] = features(SNR_vector,Nframes,modulation)
+function [result] = features(SNR_vector,Nframes,frameSize,modulation,randomInitPhaseFlag,plotFlag)
 %% Features
 % Serve pra qualquer modulação, fazer loop pra testar em modulações
 % diferentes
@@ -19,11 +19,11 @@ modulationSNR = SNR_vector; % Fazer loop pra testar SNR diferente
 for i = 1:length(modulationSNR)
     for j = 1:Nframes
         if(strcmp(modulation,'QAM4'))
-            inputModulationSignal = QAM4(4096,modulationSNR(i),0,0);
+            inputModulationSignal = QAM4(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
         elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM16(4096,modulationSNR(i),0,0);
+            inputModulationSignal = QAM16(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
         elseif(strcmp(modulation,'PSK2'))
-            inputModulationSignal = PSK2(4096,modulationSNR(i),0,0);
+            inputModulationSignal = PSK2(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
         end
 
         instValuesStruct = instantaneousValues(inputModulationSignal,Rs,1);
