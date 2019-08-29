@@ -32,12 +32,10 @@ signal_psk2 = features(SNR,frames,frameSize,'PSK2',randomInitPhaseFlag,plotFlag)
 % 9 - Desvio padrao da amplitude instantanea normalizada e centralizada
 plotVector = [1 2 3 4];
 plotFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2)
-
 %% Cálculo das médias dos frames para todas as características
 meansA = meanFeatures(SNR,signal_qam4);
 meansB = meanFeatures(SNR,signal_qam16);
 meansC = meanFeatures(SNR,signal_psk2);
-
 %% Plot das mÃ©dias
 plotVector = [1 2 3 4];
 plotMeanFeatures(plotVector,SNR,meansA,meansB,meansC)
@@ -46,3 +44,4 @@ plotMeanFeatures(plotVector,SNR,meansA,meansB,meansC)
   %ON HOLD! ToDo: check RNA creation with lolis/andre
 n_targes=3; %By now, only three modulations are under test
 len_vec=length(signal_qam4(:,:,1))
+
