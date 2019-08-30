@@ -3,13 +3,12 @@ function [dataOut] = QAM16(frameSize,SNR,phaseFlag,plotFlag)
 M = 16;                                                     % Tamanho da constelação
 k = log2(M);                                                % Número de bits por símbolo
 n = k*frameSize;                                            % Número de bits a processar
-numSamplesPerSymbol = 1;                                    % Fator de Oversampling
+numSamplesPerSymbol = 16;                                   % Fator de Oversampling
 span = 10;                                                  % Configuração do filtro
 rolloff = 0.25;                                             % Fator de rolloff do filtro
 rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Criação do filtro
 
 % Configuração da mensagem
-%rng default                                                 % Mantém o seed do gerador
 dataIn = randi([0 1],n,1);                                  % Cria o vetor da mensagem
 dataInMatrix = reshape(dataIn,length(dataIn)/k,k);          % Transformação de vetor em matrix
 dataSymbolsIn = bi2de(dataInMatrix);                        % Conversão para inteiro
@@ -19,7 +18,7 @@ dataMod = qammod(dataSymbolsIn,M);                          % Modulação usando
 initPhase = pi*(2*rand(1)-1);                               % Fase inicial randômica
 
 if(phaseFlag == 1)
-    dataMod = dataMod.*exp(1i*initPhase);                       % Aplicação da fase inicial
+    dataMod = dataMod.*exp(1i*initPhase);                   % Aplicação da fase inicial
 end
 
 % Aplicação do filtro na transmissão do sinal

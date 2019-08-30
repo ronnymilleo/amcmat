@@ -24,6 +24,10 @@ for i = 1:length(modulationSNR)
             inputModulationSignal = QAM16(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
         elseif(strcmp(modulation,'PSK2'))
             inputModulationSignal = PSK2(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
+        elseif(strcmp(modulation,'FSK2'))
+            inputModulationSignal = FSK2(frameSize,modulationSNR(i),randomInitPhaseFlag);
+        elseif(strcmp(modulation,'FSK4'))
+            inputModulationSignal = FSK4(frameSize,modulationSNR(i),randomInitPhaseFlag);
         end
 
         instValuesStruct = instantaneousValues(inputModulationSignal,Rs,1);
