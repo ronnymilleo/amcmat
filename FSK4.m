@@ -25,8 +25,10 @@ snr = SNR;
 % Aplicação do ruído do canal
 rxSignal = awgn(txSignal, snr, 'measured');
 
+dataOut = rxSignal;
+
 % Demodulação
-dataOut = fskdemod(rxSignal,M,freqSep,numSamplesPerSymbol,Fs);
+%dataOut = fskdemod(rxSignal,M,freqSep,numSamplesPerSymbol,Fs);
 
 % Cálculo da taxa de erro
 %[numErrors, ber] = biterr(dataIn, dataOut);

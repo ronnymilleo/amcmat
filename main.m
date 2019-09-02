@@ -5,7 +5,7 @@
 %% Clear memory
 clear 
 clc
-
+tic
 %% Initial values 
 SNR = [-15 -10 -5 0 5 10 15];                       % SNR vector
 frames = 100;                                       % Number of frames
@@ -38,7 +38,9 @@ signal_noise = noiseFeatures(SNR,frames,frameSize,noisePower);
 % 9 - Desvio padrao da amplitude instantanea normalizada e centralizada
 plotVector = [1 2 3 4 5 6 7 8 9];
 plotFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
+toc
 
+% Enterprise benchmark = 291.898754 s (7x100x9)
 %% Calculo das medias dos frames para todas as caracteristicas
 meansA = meanFeatures(SNR,signal_qam4);
 meansB = meanFeatures(SNR,signal_qam16);
