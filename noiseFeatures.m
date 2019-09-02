@@ -1,4 +1,4 @@
-function [result] = features(SNR_vector,Nframes,frameSize,modulation,randomInitPhaseFlag,plotFlag)
+function [result] = noiseFeatures(SNR_vector,Nframes,frameSize,noisePower)
 %% Features
 % Serve pra qualquer modulação, fazer loop pra testar em modulações
 % diferentes
@@ -18,18 +18,8 @@ modulationSNR = SNR_vector; % Fazer loop pra testar SNR diferente
 
 for i = 1:length(modulationSNR)
     for j = 1:Nframes
-        if(strcmp(modulation,'QAM4'))
-            inputModulationSignal = QAM4(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
-        elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM16(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
-        elseif(strcmp(modulation,'PSK2'))
-            inputModulationSignal = PSK2(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
-        elseif(strcmp(modulation,'FSK2'))
-            inputModulationSignal = FSK2(frameSize,modulationSNR(i),randomInitPhaseFlag);
-        elseif(strcmp(modulation,'FSK4'))
-            inputModulationSignal = FSK4(frameSize,modulationSNR(i),randomInitPhaseFlag);
-        end
-
+        inputModulationSignal = gaussianNoise(frameSize,noisePower);
+        
         instValuesStruct = instantaneousValues(inputModulationSignal,Rs,1);
         
         %Desvio padrao do valor absoluto da componente nao-linear da fase instantanea
