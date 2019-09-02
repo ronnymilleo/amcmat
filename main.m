@@ -1,21 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Universidade Federal do Paraná
+%Universidade Federal do Paraná
 % Programa de Pós-Graduação em Engenharia Elétrica
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Limpar memória
-clear 
+clear
 clc
 
-%% Initial values 
-SNR = [-10 -5 0 5 10 15 20];                        %SNR vector
+%% Initial values
+SNR = [-10 -5 0 5 10 15 20];                       %SNR vector
 frames = 10;                                        %number of frames
 frameSize = 4096;
 randomInitPhaseFlag = 0;
 plotFlag = 0;
 
-%%Generate and extract characteristics from signals 
- %with following modulations(initial test purpose): QAM4, QAM16, PSK2
- 
+%%Generate and extract characteristics from signals
+%with following modulations(initial test purpose): QAM4, QAM16, PSK2
+
 signal_qam4 = features(SNR,frames,frameSize,'QAM4',randomInitPhaseFlag,plotFlag);
 signal_qam16 = features(SNR,frames,frameSize,'QAM16',randomInitPhaseFlag,plotFlag);
 signal_psk2 = features(SNR,frames,frameSize,'PSK2',randomInitPhaseFlag,plotFlag);
@@ -43,6 +43,19 @@ plotVector = [1 2 3 4];
 plotMeanFeatures(plotVector,SNR,meansA,meansB,meansC)
 
 %% Create and train a RNA
-  %ON HOLD! ToDo: check RNA creation with lolis/andre
-n_targes=3; %By now, only three modulations are under test
-len_vec=length(signal_qam4(:,:,1))
+%ON HOLD! ToDo: check RNA creation with lolis/andre
+targets = 3; %By now, only three modulations are under test
+len_vec = length(signal_qam4(:,:,1));
+
+% Input data: result from signal characteristics extraction to each noise
+% value. Each table is a frame.
+for k = 1:frames
+    for j = 1:9%9 = nº de features
+        for i = 1:length(SNR)
+            input(i,j,k) = signal_qam4(i,k,j)
+        end
+    end
+end
+
+    
+        
