@@ -1,9 +1,9 @@
-function [dataOut] = FSK2(frameSize,SNR,phaseFlag)
+function [dataOut] = FSK2(frameSize,SNR,phaseFlag,noiseFlag)
 %% Geração do sinal FSK-2
 M = 2;                                                      % Tamanho da constelação
 k = log2(M);                                                % Número de bits por símbolo
 n = k*frameSize;                                            % Número de bits a processar
-numSamplesPerSymbol = 16;                                   % Fator de Oversampling
+numSamplesPerSymbol = 8;                                   % Fator de Oversampling
 freqSep = 10e3;                                             % Separação entre as frequẽncias da modulação
 Fs = 2*freqSep;                                             % Frequência de amostragem da simulação
 
@@ -19,11 +19,17 @@ end
 
 txSignal = dataMod;
 
-% SNR
-snr = SNR;
-
-% Aplicação do ruído do canal
-rxSignal = awgn(txSignal, snr, 'measured');
+if(noiseFlag == 1)
+    if(SNR < 50)
+        % SNR e canal
+        snr = SNR;
+        rxSignal = awgn(txSignal, snr, 'measured');                 % Aplicação do ruído do canal
+    else
+        rxSignal = txSignal;
+    end
+else
+    rxSignal = txSignal;
+end
 
 dataOut = rxSignal;
 

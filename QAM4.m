@@ -1,9 +1,9 @@
-function [dataOut] = QAM4(frameSize,SNR,phaseFlag,plotFlag)
+function [dataOut] = QAM4(frameSize,SNR,phaseFlag,noiseFlag,plotFlag)
 %% Geração do sinal 4-QAM
 M = 4;                                                      % Tamanho da constelação
 k = log2(M);                                                % Número de bits por símbolo
 n = k*frameSize;                                            % Número de bits a processar
-numSamplesPerSymbol = 16;                                   % Fator de Oversampling
+numSamplesPerSymbol = 8;                                   % Fator de Oversampling
 span = 10;                                                  % Configuração do filtro
 rolloff = 0.25;                                             % Fator de rolloff do filtro
 rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Criação do filtro
@@ -24,13 +24,21 @@ end
 % Aplicação do filtro na transmissão do sinal
 txSignal = upfirdn(dataMod,rrcFilter,numSamplesPerSymbol,1);% Sinal transmitido
 
-% SNR e canal
-snr = SNR;
-rxSignal = awgn(txSignal, snr, 'measured');                 % Aplicação do ruído do canal
+if(noiseFlag == 1)
+    if(SNR < 50)
+        % SNR e canal
+        snr = SNR;
+        rxSignal = awgn(txSignal, snr, 'measured');                 % Aplicação do ruído do canal
+    else
+        rxSignal = txSignal;
+    end
+else
+    rxSignal = txSignal;
+end
 
 % Filtro no sinal de recepção
-rxFiltSignal = upfirdn(rxSignal,rrcFilter,1,numSamplesPerSymbol);   % Aplicação do filtro na recepção
-rxFiltSignal = rxFiltSignal(span+1:end-span);                       % Retirada do delay do filtro
+%rxFiltSignal = upfirdn(rxSignal,rrcFilter,1,numSamplesPerSymbol);   % Aplicação do filtro na recepção
+%rxFiltSignal = rxFiltSignal(span+1:end-span);                       % Retirada do delay do filtro
 
 % Plot
 if(plotFlag == 1)
@@ -43,7 +51,7 @@ end
 %dataSymbolsOut = qamdemod(rxFiltSignal, M);
 %dataOutMatrix = de2bi(dataSymbolsOut,k);
 %dataOut = dataOutMatrix(:);                                 % Transformaçao de matriz para vetor
-dataOut = rxFiltSignal;
+dataOut = rxSignal/rms(rxSignal);
 
 % Cálculo da taxa de erro
 %[numErrors, ber] = biterr(dataIn, dataOut);

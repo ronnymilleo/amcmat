@@ -5,12 +5,14 @@
 %% Clear memory
 clear 
 clc
-tic
+%tic
 %% Initial values 
-SNR = [-15 -10 -5 0 5 10 15];                       % SNR vector
-frames = 100;                                       % Number of frames
+%SNR = linspace(-20,20,41);
+SNR = [-20 -15 -10 -5 0 5 10 15];                       % SNR vector
+frames = 20;                                       % Number of frames
 frameSize = 4096;                                   % Frame size in bits
 randomInitPhaseFlag = 0;                            % 1 = random initial phase
+noiseFlag = 1;                                      % 1 = generate channel noise
 plotFlag = 0;                                       % 1 = scatterplot
 noisePower = 0;                                     % Noise power in dB
 %% Generate and extract characteristics from signals 
@@ -19,11 +21,11 @@ noisePower = 0;                                     % Noise power in dB
                                        
 % Uncomment to get the same bits every time
 %rng default 
-signal_qam4 = features(SNR,frames,frameSize,'QAM4',randomInitPhaseFlag,plotFlag);
-signal_qam16 = features(SNR,frames,frameSize,'QAM16',randomInitPhaseFlag,plotFlag);
-signal_psk2 = features(SNR,frames,frameSize,'PSK2',randomInitPhaseFlag,plotFlag);
-signal_fsk2 = features(SNR,frames,frameSize,'FSK2',randomInitPhaseFlag);
-signal_fsk4 = features(SNR,frames,frameSize,'FSK4',randomInitPhaseFlag);
+signal_qam4 = features(SNR,frames,frameSize,'QAM4',randomInitPhaseFlag,noiseFlag,plotFlag);
+signal_qam16 = features(SNR,frames,frameSize,'QAM16',randomInitPhaseFlag,noiseFlag,plotFlag);
+signal_psk2 = features(SNR,frames,frameSize,'PSK2',randomInitPhaseFlag,noiseFlag,plotFlag);
+signal_fsk2 = features(SNR,frames,frameSize,'FSK2',randomInitPhaseFlag,noiseFlag);
+signal_fsk4 = features(SNR,frames,frameSize,'FSK4',randomInitPhaseFlag,noiseFlag);
 signal_noise = noiseFeatures(SNR,frames,frameSize,noisePower);
 
 %% Plot
@@ -36,9 +38,9 @@ signal_noise = noiseFeatures(SNR,frames,frameSize,noisePower);
 % 7 - Media da amplitude instantanea normalizada centralizada ao quadrado
 % 8 - Desvio padrao do valor absoluto da amplitude instantanea normalizada e centralizada
 % 9 - Desvio padrao da amplitude instantanea normalizada e centralizada
-plotVector = [1 2 3 4 5 6 7 8 9];
+plotVector = [5 8];
 plotFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
-toc
+%toc
 
 % Enterprise benchmark = 291.898754 s (7x100x9)
 %% Calculo das medias dos frames para todas as caracteristicas
@@ -50,7 +52,7 @@ meansE = meanFeatures(SNR,signal_fsk4);
 meansNoise = meanFeatures(SNR,signal_noise);
 
 %% Plot das medias
-plotVector = [1 2 3 4 5 6 7 8 9];
+plotVector = [5 8];
 plotMeanFeatures(plotVector,SNR,meansA,meansB,meansC,meansD,meansE,meansNoise)
 
 %% Create and train a RNA

@@ -1,4 +1,4 @@
-function [result] = features(SNR_vector,Nframes,frameSize,modulation,randomInitPhaseFlag,plotFlag)
+function [result] = features(SNR_vector,Nframes,frameSize,modulation,randomInitPhaseFlag,noiseFlag,plotFlag)
 %% Features
 % Serve pra qualquer modulação, fazer loop pra testar em modulações
 % diferentes
@@ -19,18 +19,18 @@ modulationSNR = SNR_vector; % Fazer loop pra testar SNR diferente
 for i = 1:length(modulationSNR)
     for j = 1:Nframes
         if(strcmp(modulation,'QAM4'))
-            inputModulationSignal = QAM4(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
+            inputModulationSignal = QAM4(frameSize,modulationSNR(i),randomInitPhaseFlag,noiseFlag,plotFlag);
         elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM16(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
+            inputModulationSignal = QAM16(frameSize,modulationSNR(i),randomInitPhaseFlag,noiseFlag,plotFlag);
         elseif(strcmp(modulation,'PSK2'))
-            inputModulationSignal = PSK2(frameSize,modulationSNR(i),randomInitPhaseFlag,plotFlag);
+            inputModulationSignal = PSK2(frameSize,modulationSNR(i),randomInitPhaseFlag,noiseFlag,plotFlag);
         elseif(strcmp(modulation,'FSK2'))
-            inputModulationSignal = FSK2(frameSize,modulationSNR(i),randomInitPhaseFlag);
+            inputModulationSignal = FSK2(frameSize,modulationSNR(i),randomInitPhaseFlag,noiseFlag);
         elseif(strcmp(modulation,'FSK4'))
-            inputModulationSignal = FSK4(frameSize,modulationSNR(i),randomInitPhaseFlag);
+            inputModulationSignal = FSK4(frameSize,modulationSNR(i),randomInitPhaseFlag,noiseFlag);
         end
 
-        instValuesStruct = instantaneousValues(inputModulationSignal,Rs,1);
+        instValuesStruct = instantaneousValues(inputModulationSignal,Rs,8);
         
         %Desvio padrao do valor absoluto da componente nao-linear da fase instantanea
         feature1(i,j) = standardDeviation(abs(instValuesStruct.instAngle));
