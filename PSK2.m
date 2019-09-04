@@ -1,9 +1,8 @@
-function [dataOut] = PSK2(frameSize,SNR,phaseFlag,noiseFlag,plotFlag)
+function [dataOut] = PSK2(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag)
 %% Geração do sinal 2-PSK
 M = 2;                                                      % Tamanho da constelação
 k = log2(M);                                                % Número de bits por símbolo
 n = k*frameSize;                                            % Número de bits a processar
-numSamplesPerSymbol = 8;                                   % Fator de Oversampling
 span = 10;                                                  % Configuração do filtro
 rolloff = 0.25;                                             % Fator de rolloff do filtro
 rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Criação do filtro

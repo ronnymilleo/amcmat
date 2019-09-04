@@ -1,4 +1,4 @@
-function [result] = features(SNR_vector,Nframes,frameSize,modulation,randomPhaseFlag,noiseFlag,plotFlag)
+function [result] = features(SNR_vector,Nframes,frameSize,numSamplesPerSymbol,modulation,randomPhaseFlag,noiseFlag,plotFlag)
 %% Features
 % Matrix allocation
 feature1 = zeros(length(SNR_vector),length(Nframes));
@@ -16,15 +16,15 @@ Rs = 10e3; % Symbol Rate
 for i = 1:length(SNR_vector)
     for j = 1:Nframes
         if(strcmp(modulation,'QAM4'))
-            inputModulationSignal = QAM4(frameSize,SNR_vector(i),randomPhaseFlag,noiseFlag,plotFlag);
+            inputModulationSignal = QAM4(frameSize,numSamplesPerSymbol,SNR_vector(i),randomPhaseFlag,noiseFlag,plotFlag);
         elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM16(frameSize,SNR_vector(i),randomPhaseFlag,noiseFlag,plotFlag);
+            inputModulationSignal = QAM16(frameSize,numSamplesPerSymbol,SNR_vector(i),randomPhaseFlag,noiseFlag,plotFlag);
         elseif(strcmp(modulation,'PSK2'))
-            inputModulationSignal = PSK2(frameSize,SNR_vector(i),randomPhaseFlag,noiseFlag,plotFlag);
+            inputModulationSignal = PSK2(frameSize,numSamplesPerSymbol,SNR_vector(i),randomPhaseFlag,noiseFlag,plotFlag);
         elseif(strcmp(modulation,'FSK2'))
-            inputModulationSignal = FSK2(frameSize,SNR_vector(i),randomPhaseFlag,noiseFlag);
+            inputModulationSignal = FSK2(frameSize,numSamplesPerSymbol,SNR_vector(i),randomPhaseFlag,noiseFlag);
         elseif(strcmp(modulation,'FSK4'))
-            inputModulationSignal = FSK4(frameSize,SNR_vector(i),randomPhaseFlag,noiseFlag);
+            inputModulationSignal = FSK4(frameSize,numSamplesPerSymbol,SNR_vector(i),randomPhaseFlag,noiseFlag);
         else
             inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
         end

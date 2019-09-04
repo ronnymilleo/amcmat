@@ -1,9 +1,8 @@
-function [dataOut] = FSK4(frameSize,SNR,phaseFlag,noiseFlag)
+function [dataOut] = FSK4(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag)
 %% Geração do sinal FSK-4
 M = 4;                                                      % Tamanho da constelação
 k = log2(M);                                                % Número de bits por símbolo
 n = k*frameSize;                                            % Número de bits a processar
-numSamplesPerSymbol = 8;                                   % Fator de Oversampling
 freqSep = 10e3;                                             % Separação entre as frequẽncias da modulação
 Fs = 4*freqSep;                                             % Frequência de amostragem da simulação
 

@@ -1,20 +1,17 @@
-function [dataOut] = QAM4(frameSize,SNR,phaseFlag,noiseFlag,plotFlag)
+function [dataOut] = QAM4(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag)
 %% Geração do sinal 4-QAM
 M = 4;                                                      % Tamanho da constelação
 k = log2(M);                                                % Número de bits por símbolo
 n = k*frameSize;                                            % Número de bits a processar
-numSamplesPerSymbol = 8;                                   % Fator de Oversampling
 span = 10;                                                  % Configuração do filtro
 rolloff = 0.25;                                             % Fator de rolloff do filtro
 rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Criação do filtro
 
 % Configuração da mensagem
 dataIn = randi([0 1],n,1);                                  % Cria o vetor da mensagem
-dataInMatrix = reshape(dataIn,length(dataIn)/k,k);          % Transformação de vetor em matrix
-dataSymbolsIn = bi2de(dataInMatrix);                        % Conversão para inteiro
 
 % Aplicação da modulação
-dataMod = qammod(dataSymbolsIn,M);                          % Modulação usando código gray
+dataMod = qammod(dataIn,M,'InputType', 'bit');              % Modulação usando código gray
 initPhase = pi*(2*rand(1)-1);                               % Fase inicial randômica
 
 if(phaseFlag == 1)
