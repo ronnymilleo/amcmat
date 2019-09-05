@@ -52,6 +52,7 @@ plotVector = [5];
 plotMeanFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 
 %% Create and train a RNA
+%ON HOLD! ToDo: check RNA creation with lolis/andre
 targets = 3; %By now, only three modulations are under test
 
 % Input data: result from signal characteristics extraction to each noise
@@ -113,22 +114,5 @@ end
 %RNA creation
 hiddenLayer = 10;
 net = patternnet(hiddenLayer,'trainrp');
+
 net.layers{2}.transferFcn = 'softmax';
-net.performFcn = 'mse';
-
-net.divideParam.trainRatio = 70/100;
-net.divideParam.valRatio = 15/100;
-net.divideParam.testRatio = 15/100;
-
-net = train(net, input, target);
-output = net(input);
-errors = gsubtract(target,output);
-performance = perform(net,target,output);
-
-figure;plotconfusion(target,output);
-ax=gca;
-ticks = {'4QAM','16QAM','2PSK'};
-set(ax,'XTickLabel',ticks);
-set(ax,'YTickLabel',ticks);
-
-view(net)
