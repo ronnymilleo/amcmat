@@ -38,13 +38,13 @@ end
 %% Ft. 2
 if(find(plotVector == 2))
     figure(2)
-    errorbar(SNR,meansQAM4(:,1,2),3*stdQAM4(:,1,2),'o-','Color',QAM4Color)
+    errorbar(SNR,meansQAM4(:,2,1),3*stdQAM4(:,2,1),'o-','Color',QAM4Color)
     hold on
-    errorbar(SNR,meansQAM16(:,1,2),3*stdQAM16(:,1,2),'x-','Color',QAM16Color)
-    errorbar(SNR,meansPSK2(:,1,2),3*stdPSK2(:,1,2),'+-','Color',PSK2Color)
-    errorbar(SNR,meansFSK2(:,1,2),3*stdFSK2(:,1,2),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,2),3*stdFSK4(:,1,2),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,2),3*stdWGN(:,1,2),'d-k')
+    errorbar(SNR,meansQAM16(:,2,1),3*stdQAM16(:,2,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,2,1),3*stdPSK2(:,2,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,2,1),3*stdFSK2(:,2,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,2,1),3*stdFSK4(:,2,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,2,1),3*stdWGN(:,2,1),'d-k')
     hold off
     title('Desvio padrão do valor direto da fase')
     xlabel('SNR')
@@ -54,13 +54,13 @@ end
 %% Ft. 3
 if(find(plotVector == 3))
     figure(3)
-    errorbar(SNR,meansQAM4(:,1,3),3*stdQAM4(:,1,3),'o-','Color',QAM4Color)
+    errorbar(SNR,meansQAM4(:,3,1),3*stdQAM4(:,3,1),'o-','Color',QAM4Color)
     hold on
-    errorbar(SNR,meansQAM16(:,1,3),3*stdQAM16(:,1,3),'x-','Color',QAM16Color)
-    errorbar(SNR,meansPSK2(:,1,3),3*stdPSK2(:,1,3),'+-','Color',PSK2Color)
-    errorbar(SNR,meansFSK2(:,1,3),3*stdFSK2(:,1,3),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,3),3*stdFSK4(:,1,3),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,3),3*stdWGN(:,1,3),'d-k')
+    errorbar(SNR,meansQAM16(:,3,1),3*stdQAM16(:,3,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,3,1),3*stdPSK2(:,3,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,3,1),3*stdFSK2(:,3,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,3,1),3*stdFSK4(:,3,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,3,1),3*stdWGN(:,3,1),'d-k')
     hold off
     title('Desvio padrão do valor absoluto da frequência')
     xlabel('SNR')
@@ -70,13 +70,13 @@ end
 %% Ft. 4
 if(find(plotVector == 4))
     figure(4)
-    errorbar(SNR,meansQAM4(:,1,4),3*stdQAM4(:,1,4),'o-','Color',QAM4Color)
+    errorbar(SNR,meansQAM4(:,4,1),3*stdQAM4(:,4,1),'o-','Color',QAM4Color)
     hold on
-    errorbar(SNR,meansQAM16(:,1,4),3*stdQAM16(:,1,4),'x-','Color',QAM16Color)
-    errorbar(SNR,meansPSK2(:,1,4),3*stdPSK2(:,1,4),'+-','Color',PSK2Color)
-    errorbar(SNR,meansFSK2(:,1,4),3*stdFSK2(:,1,4),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,4),3*stdFSK4(:,1,4),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,4),3*stdWGN(:,1,4),'d-k')
+    errorbar(SNR,meansQAM16(:,4,1),3*stdQAM16(:,4,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,4,1),3*stdPSK2(:,4,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,4,1),3*stdFSK2(:,4,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,4,1),3*stdFSK4(:,4,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,4,1),3*stdWGN(:,4,1),'d-k')
     hold off
     title('Desvio padrão do valor direto da frequência')
     xlabel('SNR')
@@ -86,13 +86,13 @@ end
 %% Ft. 5
 if(find(plotVector == 5))
     figure(5)
-    errorbar(SNR,meansQAM4(:,1,5),3*stdQAM4(:,1,5),'o-','Color',QAM4Color)
+    errorbar(SNR,meansQAM4(:,5,1),3*stdQAM4(:,5,1),'o-','Color',QAM4Color)
     hold on
-    errorbar(SNR,meansQAM16(:,1,5),3*stdQAM16(:,1,5),'x-','Color',QAM16Color)
-    errorbar(SNR,meansPSK2(:,1,5),3*stdPSK2(:,1,5),'+-','Color',PSK2Color)
-    errorbar(SNR,meansFSK2(:,1,5),3*stdFSK2(:,1,5),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,5),3*stdFSK4(:,1,5),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,5),3*stdWGN(:,1,5),'d-k')
+    errorbar(SNR,meansQAM16(:,5,1),3*stdQAM16(:,5,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,5,1),3*stdPSK2(:,5,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,5,1),3*stdFSK2(:,5,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,5,1),3*stdFSK4(:,5,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,5,1),3*stdWGN(:,5,1),'d-k')
     hold off
     title('Curtose')
     xlabel('SNR')
@@ -102,13 +102,13 @@ end
 %% Ft. 6
 if(find(plotVector == 6))
     figure(6)
-    errorbar(SNR,meansQAM4(:,1,6),3*stdQAM4(:,1,6),'o-','Color',QAM4Color)
+    errorbar(SNR,meansQAM4(:,6,1),3*stdQAM4(:,6,1),'o-','Color',QAM4Color)
     hold on
-    errorbar(SNR,meansQAM16(:,1,6),3*stdQAM16(:,1,6),'x-','Color',QAM16Color)
-    errorbar(SNR,meansPSK2(:,1,6),3*stdPSK2(:,1,6),'+-','Color',PSK2Color)
-    errorbar(SNR,meansFSK2(:,1,6),3*stdFSK2(:,1,6),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,6),3*stdFSK4(:,1,6),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,6),3*stdWGN(:,1,6),'d-k')
+    errorbar(SNR,meansQAM16(:,6,1),3*stdQAM16(:,6,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,6,1),3*stdPSK2(:,6,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,6,1),3*stdFSK2(:,6,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,6,1),3*stdFSK4(:,6,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,6,1),3*stdWGN(:,6,1),'d-k')
     hold off
     title('Valor máximo da DEP da amplitude NC')
     xlabel('SNR')
@@ -118,13 +118,13 @@ end
 %% Ft. 7
 if(find(plotVector == 7))
     figure(7)
-    errorbar(SNR,meansQAM4(:,1,7),3*stdQAM4(:,1,7),'o-','Color',QAM4Color)
+    errorbar(SNR,meansQAM4(:,7,1),3*stdQAM4(:,7,1),'o-','Color',QAM4Color)
     hold on
-    errorbar(SNR,meansQAM16(:,1,7),3*stdQAM16(:,1,7),'x-','Color',QAM16Color)
-    errorbar(SNR,meansPSK2(:,1,7),3*stdPSK2(:,1,7),'+-','Color',PSK2Color)
-    errorbar(SNR,meansFSK2(:,1,7),3*stdFSK2(:,1,7),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,7),3*stdFSK4(:,1,7),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,7),3*stdWGN(:,1,7),'d-k')
+    errorbar(SNR,meansQAM16(:,7,1),3*stdQAM16(:,7,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,7,1),3*stdPSK2(:,7,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,7,1),3*stdFSK2(:,7,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,7,1),3*stdFSK4(:,7,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,7,1),3*stdWGN(:,7,1),'d-k')
     hold off
     title('Média da amplitude NC ao quadrado')
     xlabel('SNR')
@@ -134,13 +134,13 @@ end
 %% Ft. 8
 if(find(plotVector == 8))
     figure(8)
-    errorbar(SNR,meansQAM4(:,1,8),3*stdQAM4(:,1,8),'o-','Color',QAM4Color)
+    errorbar(SNR,meansQAM4(:,8,1),3*stdQAM4(:,8,1),'o-','Color',QAM4Color)
     hold on
-    errorbar(SNR,meansQAM16(:,1,8),3*stdQAM16(:,1,8),'x-','Color',QAM16Color)
-    errorbar(SNR,meansPSK2(:,1,8),3*stdPSK2(:,1,8),'+-','Color',PSK2Color)
-    errorbar(SNR,meansFSK2(:,1,8),3*stdFSK2(:,1,8),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,8),3*stdFSK4(:,1,8),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,8),3*stdWGN(:,1,8),'d-k')
+    errorbar(SNR,meansQAM16(:,8,1),3*stdQAM16(:,8,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,8,1),3*stdPSK2(:,8,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,8,1),3*stdFSK2(:,8,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,8,1),3*stdFSK4(:,8,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,8,1),3*stdWGN(:,8,1),'d-k')
     hold off
     title('Desvio padrão do valor absoluto da amplitude NC')
     xlabel('SNR')
@@ -150,13 +150,13 @@ end
 %% Ft. 9
 if(find(plotVector == 9))
     figure(9)
-    errorbar(SNR,meansQAM4(:,1,9),3*stdQAM4(:,1,9),'o-','Color',QAM4Color)
+    errorbar(SNR,meansQAM4(:,9,1),3*stdQAM4(:,9,1),'o-','Color',QAM4Color)
     hold on
-    errorbar(SNR,meansQAM16(:,1,9),3*stdQAM16(:,1,9),'x-','Color',QAM16Color)
-    errorbar(SNR,meansPSK2(:,1,9),3*stdPSK2(:,1,9),'+-','Color',PSK2Color)
-    errorbar(SNR,meansFSK2(:,1,9),3*stdFSK2(:,1,9),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,9),3*stdFSK4(:,1,9),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,9),3*stdWGN(:,1,9),'d-k')
+    errorbar(SNR,meansQAM16(:,9,1),3*stdQAM16(:,9,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,9,1),3*stdPSK2(:,9,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,9,1),3*stdFSK2(:,9,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,9,1),3*stdFSK4(:,9,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,9,1),3*stdWGN(:,9,1),'d-k')
     hold off
     title('Desvio padrão do valor direto da amplitude NC')
     xlabel('SNR')
