@@ -10,7 +10,7 @@ clc
 %SNR = linspace(-20,20,41);
 SNR = [-20 -15 -10 -5 0 5 10 15];                   % SNR vector
 SNR_AB = 10.^(SNR/10);
-frames = 10;                                        % Number of frames
+frames = 100;                                        % Number of frames
 frameSize = 4096;                                   % Frame size in bits
 numSamplesPerSymbol = 8;                            % Oversampling factor
 randomPhaseFlag = 0;                                % 1 = random initial phase
@@ -53,66 +53,32 @@ plotMeanFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2
 
 %% Create and train a RNA
 targets = 3; %By now, only three modulations are under test
-
-% Input data: result from signal characteristics extraction to each noise
-% value. First, the data is organized by frame(each table), SNR(each line)
-% and feature(each column)
-for k = 1:frames
-    for j = 1:9%9 = amount of features
-        for i = 1:length(SNR)
-            input_qam4(i,j,k) = signal_qam4(i,k,j);
-            input_qam16(i,j,k) = signal_qam16(i,k,j);
-            input_psk2(i,j,k) = signal_psk2(i,k,j);
-            
-            if j == 9 %Adding the SNR value to the last column
-                for i = 1:length(SNR)
-                    input_qam4(i,10,k) = SNR_AB(i);
-                    input_qam16(i,10,k) = SNR_AB(i);
-                    input_psk2(i,10,k) = SNR_AB(i);
-                end
-            end                
-        end
-    end
-end
-
-%concatenate all the values from individual inputs into a unique dataset
-%with the last columns containing the target class
 input = [];
+[m,n] = size(signal_qam4(:,:,1)')
 for k = 1:targets
-    for n = 1:frames
-        switch k
-            case 1
-                input = [input;input_qam4(:,:,n)];
-            case 2
-                input = [input;input_qam16(:,:,n)];
-            case 3
-                input = [input;input_psk2(:,:,n)];
-        end
-    end
-end
-
-%Create the target class
-target = [];
-for i = 1:length(input)/(frames*length(SNR))
-    switch i
+    switch k
         case 1
-            for j = 1:length(input)/targets
-                target = [target;1];
+            for i = 1:frames
+                input = [input,signal_qam4(:,:,i)'];
             end
         case 2
-            for j = 1:length(input)/targets
-                target = [target;2];
+            for i = 1:frames
+                input = [input, signal_qam16(:,:,i)'];
             end
-        case 3
-            for j = 1:length(input)/targets
-                target = [target;3];
-            end
+        case 3 
+           for i = 1:frames
+                input = [input, signal_psk2(:,:,i)'];
+            end 
     end
 end
 
+target = [ones(1, frames*n) zeros(1, 2*frames*n)
+          zeros(1, frames*n) ones(1,frames*n) zeros(1, frames*n)
+          zeros(1, 2*frames*n) ones(1,frames*n)];
+
 %RNA creation
-hiddenLayer = 10;
-net = patternnet(hiddenLayer,'trainrp');
+hiddenLayer = 20;
+net = patternnet(hiddenLayer,'trainbr');
 net.layers{2}.transferFcn = 'softmax';
 net.performFcn = 'mse';
 
@@ -127,7 +93,7 @@ performance = perform(net,target,output);
 
 figure;plotconfusion(target,output);
 ax=gca;
-ticks = {'4QAM','16QAM','2PSK'};
+ticks = {'QAM4','QAM16','PSK2', ''};
 set(ax,'XTickLabel',ticks);
 set(ax,'YTickLabel',ticks);
 

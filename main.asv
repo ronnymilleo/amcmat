@@ -52,67 +52,49 @@ plotVector = [5];
 plotMeanFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 
 %% Create and train a RNA
-%ON HOLD! ToDo: check RNA creation with lolis/andre
 targets = 3; %By now, only three modulations are under test
-
-% Input data: result from signal characteristics extraction to each noise
-% value. First, the data is organized by frame(each table), SNR(each line)
-% and feature(each column)
-for k = 1:frames
-    for j = 1:9%9 = amount of features
-        for i = 1:length(SNR)
-            input_qam4(i,j,k) = signal_qam4(i,k,j);
-            input_qam16(i,j,k) = signal_qam16(i,k,j);
-            input_psk2(i,j,k) = signal_psk2(i,k,j);
-            
-            if j == 9 %Adding the SNR value to the last column
-                for i = 1:length(SNR)
-                    input_qam4(i,10,k) = SNR_AB(i);
-                    input_qam16(i,10,k) = SNR_AB(i);
-                    input_psk2(i,10,k) = SNR_AB(i);
-                end
-            end                
-        end
-    end
-end
-
-%concatenate all the values from individual inputs into a unique dataset
-%with the last columns containing the target class
 input = [];
+[m,n] = size(signal_qam4(:,:,1)')
 for k = 1:targets
-    for n = 1:frames
-        switch k
-            case 1
-                input = [input;input_qam4(:,:,n)];
-            case 2
-                input = [input;input_qam16(:,:,n)];
-            case 3
-                input = [input;input_psk2(:,:,n)];
-        end
-    end
-end
-
-%Create the target class
-target = [];
-for i = 1:length(input)/(frames*length(SNR))
-    switch i
+    switch k
         case 1
-            for j = 1:length(input)/targets
-                target = [target;1];
+            for i = 1:frames
+                input = [input,signal_qam4(:,:,i)'];
             end
         case 2
-            for j = 1:length(input)/targets
-                target = [target;2];
+            for i = 1:frames
+                input = [input, signal_qam16(:,:,i)'];
             end
-        case 3
-            for j = 1:length(input)/targets
-                target = [target;3];
-            end
+        case 3 
+           for i = 1:frames
+                input = [input, signal_psk2(:,:,i)'];
+            end 
     end
 end
 
-%RNA creation
-hiddenLayer = 10;
-net = patternnet(hiddenLayer,'trainrp');
+target = [ones(1, frames*m) zeros(1, 2*frames*m)
+          zeros(1, frames*length(signal_qam4(:,:,1)')) ones(1,frames*length(signal_qam4(:,:,1)')) zeros(1, frames*length(signal_qam4(:,:,1)'))
+          zeros(1, 2*frames*length(signal_qam4(:,:,1)')) ones(1,frames*length(signal_qam4(:,:,1)'))]
 
-net.layers{2}.transferFcn = 'softmax';
+%RNA creation
+% hiddenLayer = 10;
+% net = patternnet(hiddenLayer,'trainrp');
+% net.layers{2}.transferFcn = 'softmax';
+% net.performFcn = 'mse';
+% 
+% net.divideParam.trainRatio = 70/100;
+% net.divideParam.valRatio = 15/100;
+% net.divideParam.testRatio = 15/100;
+% 
+% net = train(net, input, target);
+% output = net(input);
+% errors = gsubtract(target,output);
+% performance = perform(net,target,output);
+% 
+% figure;plotconfusion(target,output);
+% ax=gca;
+% ticks = {'4QAM','16QAM','2PSK'};
+% set(ax,'XTickLabel',ticks);
+% set(ax,'YTickLabel',ticks);
+% 
+% view(net)
