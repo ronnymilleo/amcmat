@@ -5,13 +5,13 @@
 %% Clear memory
 clear 
 clc
-%tic
+tic
 %% Initial values 
 %SNR = linspace(-20,20,41);
 SNR = [-20 -15 -10 -5 0 5 10 15];                   % SNR vector
 SNR_AB = 10.^(SNR/10);
-frames = 100;                                        % Number of frames
-frameSize = 4096;                                   % Frame size in bits
+frames = 200;                                        % Number of frames
+frameSize = 2048;                                   % Frame size in bits
 numSamplesPerSymbol = 8;                            % Oversampling factor
 randomPhaseFlag = 0;                                % 1 = random initial phase
 noiseFlag = 1;                                      % 1 = generate channel noise
@@ -29,6 +29,7 @@ signal_psk2 = features(SNR,frames,frameSize,numSamplesPerSymbol,'PSK2',randomPha
 signal_fsk2 = features(SNR,frames,frameSize,numSamplesPerSymbol,'FSK2',randomPhaseFlag,noiseFlag);
 signal_fsk4 = features(SNR,frames,frameSize,numSamplesPerSymbol,'FSK4',randomPhaseFlag,noiseFlag);
 signal_noise = features(SNR,frames,frameSize,numSamplesPerSymbol,'noise');
+toc
 
 %% Plot
 % 1 - Desvio padrao do valor absoluto da componente nao-linear da fase instantanea
@@ -40,21 +41,20 @@ signal_noise = features(SNR,frames,frameSize,numSamplesPerSymbol,'noise');
 % 7 - Media da amplitude instantanea normalizada centralizada ao quadrado
 % 8 - Desvio padrao do valor absoluto da amplitude instantanea normalizada e centralizada
 % 9 - Desvio padrao da amplitude instantanea normalizada e centralizada
-close all
-plotVector = [6];
-plotFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
-%toc
-% Enterprise benchmark = 291.898754 s (7x100x9)
+
+%close all
+%plotVector = [5];
+%plotFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 
 %% Plot das medias
 close all
-plotVector = [5];
+plotVector = [1 2 3 4 5 6 7 8 9];
 plotMeanFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 
 %% Create and train a RNA
-targets = 3; %By now, only three modulations are under test
+targets = 6; %By now, only three modulations are under test
 input = [];
-[m,n] = size(signal_qam4(:,:,1)')
+[m,n] = size(signal_qam4(:,:,1)');
 for k = 1:targets
     switch k
         case 1
@@ -66,20 +66,35 @@ for k = 1:targets
                 input = [input, signal_qam16(:,:,i)'];
             end
         case 3 
-           for i = 1:frames
+            for i = 1:frames
                 input = [input, signal_psk2(:,:,i)'];
-            end 
+            end
+        case 4 
+            for i = 1:frames
+                input = [input, signal_fsk2(:,:,i)'];
+            end
+        case 5
+            for i = 1:frames
+                input = [input, signal_fsk4(:,:,i)'];
+            end
+        case 6
+            for i = 1:frames
+                input = [input, signal_noise(:,:,i)'];
+            end
     end
 end
 
-target = [ones(1, frames*n) zeros(1, 2*frames*n)
-          zeros(1, frames*n) ones(1,frames*n) zeros(1, frames*n)
-          zeros(1, 2*frames*n) ones(1,frames*n)];
+target = [ones(1, frames*n) zeros(1, 5*frames*n)
+          zeros(1, frames*n) ones(1,frames*n) zeros(1, 4*frames*n)
+          zeros(1, 2*frames*n) ones(1,frames*n) zeros(1,3*frames*n)
+          zeros(1, 3*frames*n) ones(1,frames*n) zeros(1,2*frames*n)
+          zeros(1, 4*frames*n) ones(1,frames*n) zeros(1,frames*n)
+          zeros(1, 5*frames*n) ones(1,frames*n)];
 
 %RNA creation
-hiddenLayer = 20;
+hiddenLayer = [10, 10, 10];
 net = patternnet(hiddenLayer,'trainbr');
-net.layers{2}.transferFcn = 'softmax';
+net.layers{4}.transferFcn = 'softmax';
 net.performFcn = 'mse';
 
 net.divideParam.trainRatio = 70/100;
@@ -90,11 +105,11 @@ net = train(net, input, target);
 output = net(input);
 errors = gsubtract(target,output);
 performance = perform(net,target,output);
-
+%%
 figure;plotconfusion(target,output);
 ax=gca;
-ticks = {'QAM4','QAM16','PSK2', ''};
+ticks = {'QAM4','QAM16','PSK2','FSK2','FSK4','WGN',''};
 set(ax,'XTickLabel',ticks);
 set(ax,'YTickLabel',ticks);
-
+%%
 view(net)
