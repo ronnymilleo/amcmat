@@ -11,6 +11,7 @@ dataIn = randi([0 1],n,1);  % Cria o vetor da mensagem
 
 % Aplicação da modulação
 dataMod = fskmod(dataIn,M,freqSep,numSamplesPerSymbol, Fs);    % Gray coding, phase offset = 0
+initPhase = pi*(2*rand(1)-1);
 
 if(phaseFlag == 1)
     dataMod = dataMod.*exp(1i*initPhase);                       % Aplicação da fase inicial
