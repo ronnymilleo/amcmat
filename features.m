@@ -1,16 +1,6 @@
 function [result] = features(SNR_vector,Nframes,frameSize,numSamplesPerSymbol,modulation,randomPhaseFlag,noiseFlag,plotFlag)
 %% Features
 % Matrix allocation
-% feature1 = zeros(length(SNR_vector),length(Nframes));
-% feature2 = zeros(length(SNR_vector),length(Nframes));
-% feature3 = zeros(length(SNR_vector),length(Nframes));
-% feature4 = zeros(length(SNR_vector),length(Nframes));
-% feature5 = zeros(length(SNR_vector),length(Nframes));
-% feature6 = zeros(length(SNR_vector),length(Nframes));
-% feature7 = zeros(length(SNR_vector),length(Nframes));
-% feature8 = zeros(length(SNR_vector),length(Nframes));
-% feature9 = zeros(length(SNR_vector),length(Nframes));
-
 result = zeros(length(SNR_vector),9,length(Nframes));
 
 Rs = 1/8; % Symbol Rate
@@ -34,40 +24,30 @@ for i = 1:length(SNR_vector)
         instValuesStruct = instantaneousValues(inputModulationSignal,Rs,8);
         
         %Desvio padrao do valor absoluto da componente nao-linear da fase instantanea
-        %feature1(i,j) = standardDeviation(abs(instValuesStruct.instPhase));
         result(i,1,j) = standardDeviation(abs(instValuesStruct.instPhase));
 
         %Desvio padrao da componente nao-linear da fase instantanea
-        %feature2(i,j) = standardDeviation(instValuesStruct.instPhase);
         result(i,2,j) = standardDeviation(instValuesStruct.instPhase);
 
         %Desvio padrao do valor absoluto da componente nao-linear da frequência instantanea
-        %feature3(i,j) = standardDeviation(abs(instValuesStruct.instFreq));
         result(i,3,j) = standardDeviation(abs(instValuesStruct.instFreq));
 
         %Desvio padrao da componente nao-linear da frequência instantanea
-        %feature4(i,j) = standardDeviation(instValuesStruct.instFreq);
         result(i,4,j) = standardDeviation(instValuesStruct.instFreq);
 
         %Curtose
-        %feature5(i,j) = Kurt(instValuesStruct.instAbs);
         result(i,5,j) = Kurt(instValuesStruct.instAbs);
 
         %Valor maximo da densidade espectral de potencia da amplitude instantanea normalizada e centralizada
-        %feature6(i,j) = Gmax(instValuesStruct.instCNAbs);
         result(i,6,j) = Gmax(instValuesStruct.instCNAbs);
 
         %Media da amplitude instantanea normalizada centralizada ao quadrado
-        %feature7(i,j) = meanSquared(instValuesStruct.instCNAbs);
         result(i,7,j) = meanSquared(instValuesStruct.instCNAbs);
 
         %Desvio padrao do valor absoluto da amplitude instantanea normalizada e centralizada
-        %feature8(i,j) = standardDeviation(abs(instValuesStruct.instCNAbs));
         result(i,8,j) = standardDeviation(abs(instValuesStruct.instCNAbs));
 
         %Desvio padrao da amplitude instantanea normalizada e centralizada
-        %feature9(i,j) = standardDeviation(instValuesStruct.instCNAbs);
         result(i,9,j) = standardDeviation(instValuesStruct.instCNAbs);
     end
 end
-%result = cat(3,feature1,feature2,feature3,feature4,feature5,feature6,feature7,feature8,feature9);

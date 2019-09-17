@@ -46,14 +46,15 @@ close(f);
 % 8 - Desvio padrao do valor absoluto da amplitude instantanea normalizada e centralizada
 % 9 - Desvio padrao da amplitude instantanea normalizada e centralizada
 
-%close all
-%plotVector = [5];
-%plotFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
+close all
+plotVector = [5];
+fontSize = 12;
+plotFeatures(plotVector,fontSize,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 
 %% Plot das medias
 close all
 plotVector = [5];
-plotMeanFeatures(plotVector,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
+plotMeanFeatures(plotVector,fontSize,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 
 %% Create and train a RNA
 targets = 6; %By now, only three modulations are under test

@@ -1,4 +1,4 @@
-function plotFeatures(plotVector,SNR,A,B,C,D,E,noise)
+function plotFeatures(plotVector,fontSize,SNR,A,B,C,D,E,noise)
 %% Color definition
 QAM4Color = [0.9290, 0.6940, 0.1250];
 QAM16Color = [0.8500, 0.3250, 0.0980];
@@ -17,10 +17,14 @@ if(find(plotVector == 1))
         plot(SNR,E(:,1,i),'Color',FSK4Color)
         plot(SNR,noise(:,1,i),'k')
         hold off
-        title('Desvio padrão do valor absoluto da fase')
-        xlabel('SNR')
-        ylabel('Ft. 1')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Desvio padrao do valor absoluto da fase')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end
 %%
@@ -35,10 +39,14 @@ if(find(plotVector == 2))
         plot(SNR,E(:,2,i),'Color',FSK4Color)
         plot(SNR,noise(:,2,i),'k')
         hold off
-        title('Desvio padrão do valor direto da fase')
-        xlabel('SNR')
-        ylabel('Ft. 2')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Desvio padrao do valor direto da fase')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end
 %%
@@ -53,10 +61,14 @@ if(find(plotVector == 3))
         plot(SNR,E(:,3,i),'Color',FSK4Color)
         plot(SNR,noise(:,3,i),'k')
         hold off
-        title('Desvio padrão do valor absoluto da frequência')
-        xlabel('SNR')
-        ylabel('Ft. 3')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Desvio padrao do valor absoluto da frequencia')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end
 %%
@@ -71,10 +83,14 @@ if(find(plotVector == 4))
         plot(SNR,E(:,4,i),'Color',FSK4Color)
         plot(SNR,noise(:,4,i),'k')
         hold off
-        title('Desvio padrão do valor direto da frequência')
-        xlabel('SNR')
-        ylabel('Ft. 4')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Desvio padrao do valor direto da frequencia')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end
 %%
@@ -89,10 +105,14 @@ if(find(plotVector == 5))
         plot(SNR,E(:,5,i),'Color',FSK4Color)
         plot(SNR,noise(:,5,i),'k')
         hold off
-        title('Curtose')
-        xlabel('SNR')
-        ylabel('Ft. 5')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Curtose')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end
 %%
@@ -107,10 +127,14 @@ if(find(plotVector == 6))
         plot(SNR,E(:,6,i),'Color',FSK4Color)
         plot(SNR,noise(:,6,i),'k')
         hold off
-        title('Valor máximo da DEP da amplitude NC')
-        xlabel('SNR')
-        ylabel('Ft. 6')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Valor maximo da DEP da amplitude NC')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end
 %%
@@ -125,10 +149,14 @@ if(find(plotVector == 7))
         plot(SNR,E(:,7,i),'Color',FSK4Color)
         plot(SNR,noise(:,7,i),'k')
         hold off
-        title('Média da amplitude NC ao quadrado')
-        xlabel('SNR')
-        ylabel('Ft. 7')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Media da amplitude NC ao quadrado')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end
 %%
@@ -143,10 +171,14 @@ if(find(plotVector == 8))
         plot(SNR,E(:,8,i),'Color',FSK4Color)
         plot(SNR,noise(:,8,i),'k')
         hold off
-        title('Desvio padrão do valor absoluto da amplitude NC')
-        xlabel('SNR')
-        ylabel('Ft. 8')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Desvio padrao do valor absoluto da amplitude NC')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end    
 %%
@@ -161,10 +193,14 @@ if(find(plotVector == 9))
         plot(SNR,E(:,9,i),'Color',FSK4Color)
         plot(SNR,noise(:,9,i),'k')
         hold off
-        title('Desvio padrão do valor direto da amplitude NC')
-        xlabel('SNR')
-        ylabel('Ft. 9')
-        legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise')
+        %title('Desvio padrao do valor direto da amplitude NC')
+        x = xlabel('SNR');
+        x.FontSize = fontSize;
+        y = ylabel('Amplitude');
+        y.FontSize = fontSize;
+        lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+        lgd.FontSize = fontSize;
+        set(gca,'FontSize',fontSize)
     end
 end
 end
