@@ -81,7 +81,7 @@ genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
 end
 
 %% Generate another random signal to test the RNA
-frames_test = 1; %Number of frames for testing
+frames_test = 5; %Number of frames to testparameters.
 labels = {'QAM4','QAM16','PSK2','FSK2','FSK4','WGN'};
 snr_str = {'SNR: -20dB', 'SNR: -15dB', 'SNR: -10dB', 'SNR: -5dB', 'SNR: 0dB', 'SNR: 5dB', 'SNR: 10dB', 'SNR: 15dB'};
 
@@ -95,7 +95,7 @@ for i = 1:length(modulations)
         end
         output_qam4 = amcFcn(input_qam4);
         if isPlot
-            for j = 1:length(parameters.SNR)
+            for j = 1:length(SNR)
                 figure    
                 pie(output_qam4(:,j))
                 legend(labels)
@@ -111,7 +111,7 @@ for i = 1:length(modulations)
         end
         output_qam16 = amcFcn(input_qam16);
         if isPlot
-            for j = 1:length(parameters.SNR)
+            for j = 1:length(SNR)
                 figure    
                 pie(output_qam16(:,j))
                 legend(labels)
@@ -120,14 +120,13 @@ for i = 1:length(modulations)
         end
     elseif(strcmp(modulations{i},'PSK2'))
         input_psk2 = [];
-        data_psk2 = features(parameters.SNR,frames_test,parameters.frameSize,parameters.numSamplesPerSymbol,...
-                            'PSK2',parameters.randomPhaseFlag,parameters.noiseFlag,parameters.plotFlag);
+        data_psk2 = features(SNR,frames_test,frameSize,numSamplesPerSymbol,'PSK2',randomPhaseFlag,noiseFlag,plotFlag);
         for f = 1:frames_test
             input_psk2 = [input_psk2, data_psk2(:,:,f)'];
         end
         output_psk2 = amcFcn(input_psk2);
         if isPlot
-            for j = 1:length(parameters.SNR)
+            for j = 1:length(SNR)
                 figure    
                 pie(output_psk2(:,j))
                 legend(labels)
@@ -136,14 +135,13 @@ for i = 1:length(modulations)
         end
     elseif(strcmp(modulations{i},'FSK2'))
         input_fsk2 = [];
-        data_fsk2 = features(parameters.SNR,frames_test,parameters.frameSize,parameters.numSamplesPerSymbol,...
-                            'FSK2',parameters.randomPhaseFlag,parameters.noiseFlag,parameters.plotFlag);
+        data_fsk2 = features(SNR,frames_test,frameSize,numSamplesPerSymbol,'FSK2',randomPhaseFlag,noiseFlag);
         for f = 1:frames_test
             input_fsk2 = [input_fsk2, data_fsk2(:,:,f)'];
         end
         output_fsk2 = amcFcn(input_fsk2);
         if isPlot
-            for j = 1:length(parameters.SNR)
+            for j = 1:length(SNR)
                 figure    
                 pie(output_fsk2(:,j))
                 legend(labels)
@@ -152,14 +150,13 @@ for i = 1:length(modulations)
         end
     elseif(strcmp(modulations{i},'FSK4'))
         input_fsk4 = [];
-        data_fsk4 = features(parameters.SNR,frames_test,parameters.frameSize,parameters.numSamplesPerSymbol,...
-                            'FSK4',parameters.randomPhaseFlag,parameters.noiseFlag,parameters.plotFlag);
+        data_fsk4 = features(SNR,frames_test,frameSize,numSamplesPerSymbol,'FSK4',randomPhaseFlag,noiseFlag);
         for f = 1:frames_test
             input_fsk4 = [input_fsk4, data_fsk4(:,:,f)'];
         end
         output_fsk4 = amcFcn(input_fsk4);
         if isPlot
-            for j = 1:length(parameters.SNR)
+            for j = 1:length(SNR)
                 figure    
                 pie(output_fsk4(:,j))
                 legend(labels)
@@ -168,13 +165,13 @@ for i = 1:length(modulations)
         end
     else
         input_noise = [];
-        data_noise = features(parameters.SNR,frames_test,parameters.frameSize,parameters.numSamplesPerSymbol,'noise');
+        data_noise = features(SNR,frames_test,frameSize,numSamplesPerSymbol,'noise');
         for f = 1:frames_test
             input_noise = [input_noise, data_noise(:,:,f)'];
         end
         output_noise = amcFcn(input_noise);        
         if isPlot
-            for j = 1:length(parameters.SNR)
+            for j = 1:length(SNR)
                 figure    
                 pie(output_noise(:,j))
                 legend(labels)

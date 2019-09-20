@@ -31,8 +31,7 @@ signal_fsk2 = features(SNR,frames,frameSize,numSamplesPerSymbol,'FSK2',randomPha
 signal_fsk4 = features(SNR,frames,frameSize,numSamplesPerSymbol,'FSK4',randomPhaseFlag,noiseFlag);
 signal_noise = features(SNR,frames,frameSize,numSamplesPerSymbol,'noise');
 
-save('amcData', 'signal_qam4', 'signal_qam16', 'signal_psk2', 'signal_fsk2', 'signal_fsk4', 'signal_noise');
-
+save('amcData', signal_qam4, signal_qam16, signal_psk2, signal_fsk2, signal_fsk4, signal_noise);
 %close(d);
 %close(f);
 %% Plot
@@ -61,7 +60,7 @@ plotMeanFeatures(plotVector,fontSize,SNR,signal_qam4,signal_qam16,signal_psk2,si
 %random signal and test it using the current RNA configuration; second 
 %parameter is the group of modulations to test; third is whether to plot
 %the results or not
-modulations = {'QAM4', 'QAM16','PSK2', 'FSK2', 'FSK4', 'NOISE'};
+modulations = {'QAM4', 'QAM16'};
 parameters = struct('frames',frames,'frameSize',frameSize,'SNR',SNR,'noiseFlag',noiseFlag,...
                     'numSamplesPerSymbol',numSamplesPerSymbol,'randomPhaseFlag',randomPhaseFlag,'plotFlag',plotFlag);
 result = amcNet(false, modulations, false, parameters);
