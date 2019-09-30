@@ -93,7 +93,7 @@ errors = gsubtract(target,output);
 performance = perform(net,target,output);
 config = strrep(num2str(hiddenLayer),'   ','-');
 name = strcat('netConfig','-',config);
-save(name,'errors','performance','net','target','output')
+save(name,'net')
 %% Generate a function for evaluating the RNA with random data
 genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
 %%

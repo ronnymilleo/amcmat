@@ -57,11 +57,13 @@ close(f)
 
 %% RNA
 %% Train
-file = 'amcData4096_8x10x1000'; % Specify the calculated features file name to train
+dataFile = 'amcData4096_8x10x1000'; % Specify the calculated features file name to train
 hiddenLayers = [10,6]; % Config the setup of hidden layers
 isPlot = 1; % Do you want to plot? It's confusion matrix
-forgeNetwork(file,'ALL',isPlot,frames,hiddenLayers); % 'ALL' is default for training
+forgeNetwork(dataFile,'ALL',isPlot,frames,hiddenLayers); % 'ALL' is default for training
 %% Evaluate
-file = 'amcData4096_8x10x1000'; % Specify the calculated features file name to evaluate
+dataFile = 'amcData4096_8x10x1000'; % Specify the calculated features file name to evaluate
 SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
-useNetwork(file,frames,SNR) 
+netFile = 'netConfig-10-6'; % Specify the created network file name to evaluate
+genFunction(net, 'amcFcn', 'MatrixOnly', 'yes'); % Update network function
+useNetwork(dataFile,frames,SNR) % Do the work
