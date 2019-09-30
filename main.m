@@ -8,7 +8,7 @@ clc
 %% Initial values
 SNR = [-20 -15 -10 -5 0 5 10 15];                   % SNR vector
 frames = 1000;                                      % Number of frames
-frameSize = 4096;                                   % Frame size in bits
+frameSize = 2048;                                   % Frame size in bits
 numSamplesPerSymbol = 8;                            % Oversampling factor
 randomPhaseFlag = 1;                                % 1 = random initial phase
 noiseFlag = 1;                                      % 1 = generate channel noise
@@ -56,11 +56,12 @@ close(f)
 %plotMeanFeatures(plotVector,fontSize,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 
 %% RNA
-%If the first parameter is true, the RNA is created and trained again. Otherwise it will only generate a
-%random signal and test it using the current RNA configuration; second 
-%parameter is the group of modulations to test; third is whether to plot
-%the results or not
-modulations = {'QAM4','QAM16'};%,'PSK2', 'FSK2', 'FSK4', 'NOISE'};
-parameters = struct('frames',frames,'frameSize',frameSize,'SNR',SNR,'noiseFlag',noiseFlag,...
-                    'numSamplesPerSymbol',numSamplesPerSymbol,'randomPhaseFlag',randomPhaseFlag,'plotFlag',plotFlag);
-result = amcNet(true, modulations, true, parameters);
+%% Train
+file = 'amcData4096_8x10x1000'; % Specify the calculated features file name to train
+hiddenLayers = [10,6]; % Config the setup of hidden layers
+isPlot = 1; % Do you want to plot? It's confusion matrix
+forgeNetwork(file,'ALL',isPlot,frames,hiddenLayers); % 'ALL' is default for training
+%% Evaluate
+file = 'amcData4096_8x10x1000'; % Specify the calculated features file name to evaluate
+SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
+useNetwork(file,frames,SNR) 
