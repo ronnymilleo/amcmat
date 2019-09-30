@@ -49,5 +49,8 @@ for i = 1:length(SNR_vector)
 
         %Desvio padrao da amplitude instantanea normalizada e centralizada
         result(i,9,j) = standardDeviation(instValuesStruct.instCNAbs);
+        
+        %SNR linear
+        result(i,10,j) = 10^(SNR_vector(i)/10);
     end
 end

@@ -1,5 +1,5 @@
 function [result] =  amcNet(reload, modulations, isPlot, parameters)
-load('amcData')
+load('amcData_noInitialPhase')
 result = [];
 output_qam4 = [];
 output_qam16 = [];
@@ -49,23 +49,23 @@ target = [ones(1, parameters.frames*n) zeros(1, 5*parameters.frames*n)
       zeros(1, 5*parameters.frames*n) ones(1,parameters.frames*n)];
 
 %RNA creation
-hiddenLayer = [10, 10, 10];
-net = patternnet(hiddenLayer,'trainbr');
-net.layers{4}.transferFcn = 'softmax';
+hiddenLayer = [10,6];
+trainingFunction = 'trainbr';
+transferFunction = 'softmax';
+net = patternnet(hiddenLayer,trainingFunction);
+net.layers{3}.transferFcn = transferFunction;
 net.performFcn = 'mse';
-
-%net.trainFcn = 'trainscg';
-%net.trainParam.goal=1e-6;
 
 net.divideParam.trainRatio = 70/100;
 net.divideParam.valRatio = 15/100;
 net.divideParam.testRatio = 15/100;
-%net = train(net, input, target, 'useParallel','yes','showResources','yes','useGPU','yes');
 net = train(net, input, target);
 output = net(input);
 errors = gsubtract(target,output);
 performance = perform(net,target,output);
-
+config = strrep(num2str(hiddenlayer),'   ','-')
+name = strcat('netConfig','-',num2str(hiddenLayer));
+save(name,'errors','performance','net','target','output')
 %%
 figure;plotconfusion(target,output);
 ax=gca;
@@ -81,7 +81,7 @@ genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
 end
 
 %% Generate another random signal to test the RNA
-frames_test = 1; %Number of frames for testing
+frames_test = 100; %Number of frames for testing
 labels = {'QAM4','QAM16','PSK2','FSK2','FSK4','WGN'};
 snr_str = {'SNR: -20dB', 'SNR: -15dB', 'SNR: -10dB', 'SNR: -5dB', 'SNR: 0dB', 'SNR: 5dB', 'SNR: 10dB', 'SNR: 15dB'};
 
