@@ -1,5 +1,5 @@
 function [result] =  amcNet(reload, modulations, isPlot, parameters)
-load('amcData_noInitialPhase')
+load('amcData')
 result = [];
 output_qam4 = [];
 output_qam16 = [];
