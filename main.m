@@ -66,4 +66,4 @@ dataFile = 'amcData4096_8x10x1000'; % Specify the calculated features file name 
 SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
 netFile = 'netConfig-10-6'; % Specify the created network file name to evaluate
 genFunction(net, 'amcFcn', 'MatrixOnly', 'yes'); % Update network function
-useNetwork(dataFile,frames,SNR) % Do the work
+useNetwork(dataFile,frames,SNRstring) % Do the work
