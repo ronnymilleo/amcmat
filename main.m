@@ -64,16 +64,14 @@ close(f)
 % plotMeanFeatures(plotVector,fontSize,snrVector,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 %% RNA
 %% Train
-dataFile = 'ftData2048-1-2-3-4-5-6-7-8-9-0'; % Specify the calculated features file name to train
+dataFile = 'ftData4096-1-2-3-4-5-6-7-8-9-0'; % Specify the calculated features file name to train
 SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
 % 'ALL' is default for training
 hiddenLayer = [10,6]; % Config the setup of hidden layers
 isPlot = 1; % Do you want to plot? It's confusion matrix
 forgeNetwork(dataFile,SNRstring,isPlot,frames,hiddenLayer);
 %% Evaluate
-dataFile = 'ftData2048-1-2-3-4-5-6-7-8-9-0'; % Specify the calculated features file name to evaluate
+dataFile = 'ftData4096-1-2-3-4-5-6-7-8-9-0'; % Specify the calculated features file name to evaluate
 SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
-netFile = 'netConfig-10-6-ftData2048-1-2-3-4-5-6-7-8-9-0'; % Specify the created network file name to evaluate
-load(netFile)
-genFunction(net, 'amcFcn', 'MatrixOnly', 'yes'); % Update network function
-useNetwork(dataFile,frames,SNRstring) % Do the work
+netFile = 'netConfig-10-6-ftData4096-1-2-3-4-5-6-7-8-9-0'; % Specify the created network file name to evaluate
+useNetwork(dataFile,netFile,frames,SNRstring) % Do the work

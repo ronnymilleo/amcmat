@@ -1,4 +1,4 @@
-function [result] = useNetwork(file,frames,SNR)
+function [] = useNetwork(file,netFile,frames,SNR)
 %% Use existing network
 % Allocation
 signal_qam4 = [];
@@ -83,7 +83,12 @@ else
           zeros(1, 4*frames*n) ones(1,frames*n) zeros(1,frames*n)
           zeros(1, 5*frames*n) ones(1,frames*n)];
 end
+load(netFile)
+genFunction(net, 'amcFcn', 'MatrixOnly', 'yes'); % Update network function
 output = amcFcn(input);
+performance = perform(net,target,output);
+str = strcat('Network performance: ',num2str(performance));
+disp(str)
 figure;plotconfusion(target,output);
 ax=gca;
 ticks = {'QAM4','QAM16','PSK2','FSK2','FSK4','WGN',''};
