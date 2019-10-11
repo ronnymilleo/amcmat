@@ -1,31 +1,30 @@
 function [dataOut] = QAM16(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag)
-%% Geração do sinal 16-QAM
-M = 16;                                                     % Tamanho da constelação
-k = log2(M);                                                % Número de bits por símbolo
-n = k*frameSize;                                            % Número de bits a processar
-span = 10;                                                  % Configuração do filtro
-rolloff = 0.25;                                             % Fator de rolloff do filtro
-rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Criação do filtro
+%% Signal generation
+M = 16;                                                     % Constelation size
+k = log2(M);                                                % Bits per symbol
+n = k*frameSize;                                            % Frame size in bits
+span = 10;                                                  % Filter config
+rolloff = 0.25;                                             % Filter rolloff
+rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Filter creation
 
-% Configuração da mensagem
-dataIn = randi([0 1],n,1);                                  % Cria o vetor da mensagem
+% Message
+dataIn = randi([0 1],n,1);                                  % Create random message
 
-% Aplicação da modulação
-dataMod = qammod(dataIn,M,'InputType', 'bit');              % Modulação usando código gray
-initPhase = pi*(2*rand(1)-1);                               % Fase inicial randômica
+% Modulation
+dataMod = qammod(dataIn,M,'InputType', 'bit');              % Modulate signal
+initPhase = pi*(2*rand(1)-1);                               % Generate random phase
 
 if(phaseFlag == 1)
-    dataMod = dataMod.*exp(1i*initPhase);                   % Aplicação da fase inicial
+    dataMod = dataMod.*exp(1i*initPhase);                   % Add random phase
 end
 
-% Aplicação do filtro na transmissão do sinal
-txSignal = upfirdn(dataMod,rrcFilter,numSamplesPerSymbol,1);% Sinal transmitido
+% Transmission filter
+txSignal = upfirdn(dataMod,rrcFilter,numSamplesPerSymbol,1);% Transmitted signal
 
 if(noiseFlag == 1)
     if(SNR < 50)
-        % SNR e canal
         snr = SNR;
-        rxSignal = awgn(txSignal, snr, 'measured');                 % Aplicação do ruído do canal
+        rxSignal = awgn(txSignal, snr, 'measured'); % Channel noise
     else
         rxSignal = txSignal;
     end
@@ -33,9 +32,8 @@ else
     rxSignal = txSignal;
 end
 
-% Filtro no sinal de recepção
-%rxFiltSignal = upfirdn(rxSignal,rrcFilter,1,numSamplesPerSymbol);   % Aplicação do filtro na recepção
-%rxFiltSignal = rxFiltSignal(span+1:end-span);                       % Retirada do delay do filtro
+% Removing filter delay
+rxSignal = rxSignal(span*numSamplesPerSymbol/2+1:end-span*numSamplesPerSymbol/2-1);
 
 % Plot
 if(plotFlag == 1)
@@ -44,14 +42,5 @@ if(plotFlag == 1)
     scatterplot(dataMod,1,0,'k*',sPlotFig)
 end
 
-% Demodulação
-%dataSymbolsOut = qamdemod(rxFiltSignal, M);
-%dataOutMatrix = de2bi(dataSymbolsOut,k);
-%dataOut = dataOutMatrix(:);                                 % Transformaçao de matrix para vetor
 dataOut = rxSignal/rms(rxSignal);
-
-% Cálculo da taxa de erro
-%[numErrors, ber] = biterr(dataIn, dataOut);
-%fprintf('\nBER = %5.2e, baseado em %d erros\n', ...
-%    ber, numErrors)
 end
