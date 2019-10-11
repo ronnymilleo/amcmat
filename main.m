@@ -6,10 +6,10 @@
 clear 
 clc
 %% Initial values
-snrVector = [-20 -15 -10 -5 0 5 10 15];             % SNR vector
-frames = 2000;                                      % Number of frames
-frameSize = 2048;                                   % Frame size in bits
-featuresVector = [1 2 3 4 5 6 7 8 9 0];             % Features selection vector
+snrVector = [-15 -10 -5 0 5 10 15];             % SNR vector
+frames = 1000;                                      % Number of frames
+frameSize = 4096;                                   % Frame size in bits
+featuresVector = [1 2 3 4 5 6 7 8 9];             % Features selection vector
 numSamplesPerSymbol = 8;                            % Oversampling factor
 randomPhaseFlag = 1;                                % 1 = random initial phase
 noiseFlag = 1;                                      % 1 = generate channel noise
@@ -58,20 +58,20 @@ close(f)
 %fontSize = 12;
 %plotFeatures(plotVector,fontSize,SNR,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 %% Plot das medias
-% close all
-% plotVector = [1 2 3 4 5];
-% fontSize = 12;
-% plotMeanFeatures(plotVector,fontSize,snrVector,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
+close all
+plotVector = [1 2 3 4 5 6 7 8 9];
+fontSize = 12;
+plotMeanFeatures(plotVector,fontSize,snrVector,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 %% RNA
 %% Train
-dataFile = 'ftData4096-1-2-3-4-5-6-7-8-9-0'; % Specify the calculated features file name to train
+dataFile = 'ftData4096-1-2-3-4-5-6-7-8-9'; % Specify the calculated features file name to train
 SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
 % 'ALL' is default for training
-hiddenLayer = [10,6]; % Config the setup of hidden layers
+hiddenLayer = [10,8,6]; % Config the setup of hidden layers
 isPlot = 1; % Do you want to plot? It's confusion matrix
 forgeNetwork(dataFile,SNRstring,isPlot,frames,hiddenLayer);
 %% Evaluate
-dataFile = 'ftData4096-1-2-3-4-5-6-7-8-9-0'; % Specify the calculated features file name to evaluate
-SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
-netFile = 'netConfig-10-6-ftData4096-1-2-3-4-5-6-7-8-9-0'; % Specify the created network file name to evaluate
+dataFile = 'ftData4096-1-2-3-4-5-6-7-8-9'; % Specify the calculated features file name to evaluate
+SNRstring = '-5'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
+netFile = 'netConfig-10-8-6-ftData4096-1-2-3-4-5-6-7-8-9'; % Specify the created network file name to evaluate
 useNetwork(dataFile,netFile,frames,SNRstring) % Do the work
