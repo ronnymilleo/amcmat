@@ -1,8 +1,8 @@
-function [dataOut] = QAM16(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag,ampFlag)
+function [dataOut] = PSK8(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag,ampFlag)
 %% Signal generation
-M = 16;                                                     % Constelation size
+M = 8;                                                      % Constelation size
 k = log2(M);                                                % Bits per symbol
-n = (frameSize+1);                                          % Frame size in bits
+n = k*(frameSize+1);                                        % Frame size in bits
 span = 10;                                                  % Filter config
 rolloff = 0.25;                                             % Filter rolloff
 rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Filter creation
@@ -26,14 +26,14 @@ switch nargin
 end
 
 % Message
-dataIn = randi([0 M-1],n,1);                                % Create random message
+dataIn = randi([0 1],n,1);                                  % Create random message
 
 % Modulation
-dataMod = qammod(dataIn,M, 'UnitAveragePower', true);       % Modulate signal
+dataMod = pskmod(dataIn,M);                                 % Modulate signal
 initPhase = pi*(2*rand(1)-1);                               % Generate random phase
 
 if(phaseFlag == 1)
-    dataMod = dataMod.*exp(1i*initPhase);                   % Add random phase
+    dataMod = dataMod.*exp(1i*initPhase);                   % Apply random phase
 end
 
 % Transmission filter

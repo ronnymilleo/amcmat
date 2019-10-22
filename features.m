@@ -8,15 +8,15 @@ Rs = 1/8; % Symbol Rate
 for i = 1:length(snrVector)
     for j = 1:nFrames
         if(strcmp(modulation,'QAM4'))
-            inputModulationSignal = QAM4(frameSize,numSamplesPerSymbol,snrVector(i),randomPhaseFlag,noiseFlag,plotFlag);
+            inputModulationSignal = QAM4(frameSize,numSamplesPerSymbol,snrVector(i));
         elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM16(frameSize,numSamplesPerSymbol,snrVector(i),randomPhaseFlag,noiseFlag,plotFlag);
+            inputModulationSignal = QAM16(frameSize,numSamplesPerSymbol,snrVector(i));
         elseif(strcmp(modulation,'PSK2'))
-            inputModulationSignal = PSK2(frameSize,numSamplesPerSymbol,snrVector(i),randomPhaseFlag,noiseFlag,plotFlag);
+            inputModulationSignal = PSK2(frameSize,numSamplesPerSymbol,snrVector(i));
         elseif(strcmp(modulation,'FSK2'))
-            inputModulationSignal = FSK2(frameSize,numSamplesPerSymbol,snrVector(i),randomPhaseFlag,noiseFlag);
+            inputModulationSignal = FSK2(frameSize,numSamplesPerSymbol,snrVector(i));
         elseif(strcmp(modulation,'FSK4'))
-            inputModulationSignal = FSK4(frameSize,numSamplesPerSymbol,snrVector(i),randomPhaseFlag,noiseFlag);
+            inputModulationSignal = FSK4(frameSize,numSamplesPerSymbol,snrVector(i));
         else
             inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
         end

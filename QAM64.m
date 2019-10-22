@@ -1,6 +1,6 @@
-function [dataOut] = QAM16(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag,ampFlag)
+function [dataOut] = QAM64(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag,ampFlag)
 %% Signal generation
-M = 16;                                                     % Constelation size
+M = 64;                                                     % Constelation size
 k = log2(M);                                                % Bits per symbol
 n = (frameSize+1);                                          % Frame size in bits
 span = 10;                                                  % Filter config
