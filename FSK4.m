@@ -1,4 +1,4 @@
-function [dataOut] = FSK4(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,ampFlag)
+function [dataOut] = FSK4(frameSize,numSamplesPerSymbol,SNR,noiseFlag,ampFlag)
 %% Signal generation
 M = 4; % Number of symbols
 n = frameSize; % Frame size in bits
@@ -8,13 +8,9 @@ Fs = M*numSamplesPerSymbol; % Sampling frequency
 % Default settings
 switch nargin
     case 3
-        phaseFlag = 1;
         noiseFlag = 1;
         ampFlag = 1;
     case 4
-        noiseFlag = 1;
-        ampFlag = 1;
-    case 5
         ampFlag = 1;
 end
 
@@ -23,11 +19,12 @@ dataIn = randi([0 M-1],n,1); % Create random message
 
 % Modulation
 dataMod = fskmod(dataIn,M,freqSep,numSamplesPerSymbol, Fs);
-initPhase = pi*(2*rand(1)-1); % Generate random phase
 
-if(phaseFlag == 1)
-    dataMod = dataMod.*exp(1i*initPhase); % Add random phase
-end
+%initPhase = pi*(2*rand(1)-1); % Generate random phase
+
+% if(phaseFlag == 1)
+%     dataMod = dataMod.*exp(1i*initPhase); % Add random phase
+% end
 
 txSignal = dataMod;
 

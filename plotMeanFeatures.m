@@ -30,7 +30,7 @@ if(find(plotVector == 1))
     errorbar(SNR,meansFSK4(:,1,1),3*stdFSK4(:,1,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,1,1),3*stdWGN(:,1,1),'d-k')
     hold off
-    %title('Desvio padrao do valor absoluto da fase')
+    title('Desvio padrao do valor absoluto da fase')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');
@@ -50,7 +50,7 @@ if(find(plotVector == 2))
     errorbar(SNR,meansFSK4(:,2,1),3*stdFSK4(:,2,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,2,1),3*stdWGN(:,2,1),'d-k')
     hold off
-    %title('Desvio padrao do valor direto da fase')
+    title('Desvio padrao do valor direto da fase')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');
@@ -70,7 +70,7 @@ if(find(plotVector == 3))
     errorbar(SNR,meansFSK4(:,3,1),3*stdFSK4(:,3,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,3,1),3*stdWGN(:,3,1),'d-k')
     hold off
-    %title('Desvio padrao do valor absoluto da frequencia')
+    title('Desvio padrao do valor absoluto da frequencia')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');
@@ -90,7 +90,7 @@ if(find(plotVector == 4))
     errorbar(SNR,meansFSK4(:,4,1),3*stdFSK4(:,4,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,4,1),3*stdWGN(:,4,1),'d-k')
     hold off
-    %title('Desvio padrao do valor direto da frequencia')
+    title('Desvio padrao do valor direto da frequencia')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');
@@ -110,7 +110,7 @@ if(find(plotVector == 5))
     errorbar(SNR,meansFSK4(:,5,1),3*stdFSK4(:,5,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,5,1),3*stdWGN(:,5,1),'d-k')
     hold off
-    %title('Curtose')
+    title('Achatamento da distribuição normal (Curtose)')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');
@@ -130,7 +130,7 @@ if(find(plotVector == 6))
     errorbar(SNR,meansFSK4(:,6,1),3*stdFSK4(:,6,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,6,1),3*stdWGN(:,6,1),'d-k')
     hold off
-    %title('Valor maximo da DEP da amplitude NC')
+    title('Valor maximo da DEP da amplitude NC')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');
@@ -150,7 +150,7 @@ if(find(plotVector == 7))
     errorbar(SNR,meansFSK4(:,7,1),3*stdFSK4(:,7,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,7,1),3*stdWGN(:,7,1),'d-k')
     hold off
-    %title('Media da amplitude NC ao quadrado')
+    title('Media da amplitude NC ao quadrado')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');
@@ -170,7 +170,7 @@ if(find(plotVector == 8))
     errorbar(SNR,meansFSK4(:,8,1),3*stdFSK4(:,8,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,8,1),3*stdWGN(:,8,1),'d-k')
     hold off
-    %title('Desvio padrao do valor absoluto da amplitude NC')
+    title('Desvio padrao do valor absoluto da amplitude NC')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');
@@ -190,7 +190,27 @@ if(find(plotVector == 9))
     errorbar(SNR,meansFSK4(:,9,1),3*stdFSK4(:,9,1),'^-','Color',FSK4Color)
     errorbar(SNR,meansWGN(:,9,1),3*stdWGN(:,9,1),'d-k')
     hold off
-    %title('Desvio padrao do valor direto da amplitude NC')
+    title('Desvio padrao do valor direto da amplitude NC')
+    x = xlabel('SNR');
+    x.FontSize = fontSize;
+    y = ylabel('Amplitude');
+    y.FontSize = fontSize;
+    lgd = legend('QAM4','QAM16','BPSK','FSK2','FSK4','Noise');
+    lgd.FontSize = fontSize;
+    set(gca,'FontSize',fontSize)
+end
+%% Ft. 0
+if(find(plotVector == 10))
+    figure(10)
+    errorbar(SNR,meansQAM4(:,10,1),3*stdQAM4(:,10,1),'o-','Color',QAM4Color)
+    hold on
+    errorbar(SNR,meansQAM16(:,10,1),3*stdQAM16(:,10,1),'x-','Color',QAM16Color)
+    errorbar(SNR,meansPSK2(:,10,1),3*stdPSK2(:,10,1),'+-','Color',PSK2Color)
+    errorbar(SNR,meansFSK2(:,10,1),3*stdFSK2(:,10,1),'*-','Color',FSK2Color)
+    errorbar(SNR,meansFSK4(:,10,1),3*stdFSK4(:,10,1),'^-','Color',FSK4Color)
+    errorbar(SNR,meansWGN(:,10,1),3*stdWGN(:,10,1),'d-k')
+    hold off
+    title('Assimetria da distribuição normal (Skewness)')
     x = xlabel('SNR');
     x.FontSize = fontSize;
     y = ylabel('Amplitude');

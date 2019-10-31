@@ -1,22 +1,22 @@
-function [result] = features(snrVector,nFrames,frameSize,featuresVector,numSamplesPerSymbol,modulation,randomPhaseFlag,noiseFlag,plotFlag)
+function [result] = features(snrVector,nFrames,frameSize,featuresVector,numSamplesPerSymbol,modulation,randomPhaseFlag,noiseFlag,plotFlag,ampFlag)
 %% Features
 % Matrix allocation
 result = zeros(length(snrVector),length(featuresVector),length(nFrames));
 
-Rs = 1/8; % Symbol Rate
+Rs = 1; % Symbol Rate
 
 for i = 1:length(snrVector)
     for j = 1:nFrames
         if(strcmp(modulation,'QAM4'))
-            inputModulationSignal = QAM4(frameSize,numSamplesPerSymbol,snrVector(i));
+            inputModulationSignal = QAM4(frameSize,numSamplesPerSymbol,snrVector(i),randomPhaseFlag,noiseFlag,plotFlag,ampFlag);
         elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM16(frameSize,numSamplesPerSymbol,snrVector(i));
+            inputModulationSignal = QAM16(frameSize,numSamplesPerSymbol,snrVector(i),randomPhaseFlag,noiseFlag,plotFlag,ampFlag);
         elseif(strcmp(modulation,'PSK2'))
-            inputModulationSignal = PSK2(frameSize,numSamplesPerSymbol,snrVector(i));
+            inputModulationSignal = PSK2(frameSize,numSamplesPerSymbol,snrVector(i),randomPhaseFlag,noiseFlag,plotFlag,ampFlag);
         elseif(strcmp(modulation,'FSK2'))
-            inputModulationSignal = FSK2(frameSize,numSamplesPerSymbol,snrVector(i));
+            inputModulationSignal = FSK2(frameSize,numSamplesPerSymbol,snrVector(i),noiseFlag,ampFlag);
         elseif(strcmp(modulation,'FSK4'))
-            inputModulationSignal = FSK4(frameSize,numSamplesPerSymbol,snrVector(i));
+            inputModulationSignal = FSK4(frameSize,numSamplesPerSymbol,snrVector(i),noiseFlag,ampFlag);
         else
             inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
         end
@@ -70,9 +70,11 @@ for i = 1:length(snrVector)
             result(i,x,j) = standardDeviation(instValuesStruct.instCNAbs);
             x = x + 1;
         end
-        if(find(featuresVector == 0))
+        if(find(featuresVector == 10))
             %SNR linear
-            result(i,x,j) = 10^(snrVector(i)/10);
+            %result(i,x,j) = 10^(snrVector(i)/10);
+            % Skewness
+            result(i,x,j) = Skew(instValuesStruct.instAbs);
         end
     end
 end

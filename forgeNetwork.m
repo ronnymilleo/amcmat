@@ -1,4 +1,4 @@
-function forgeNetwork(file,SNRstring,isPlot,frames,hiddenLayer)
+function forgeNetwork(file,SNR,isPlot,frames,hiddenLayer)
 %% Create a new network using input parameters
 % file is the string name of the file that will be loaded
 % SNR is the string setting to select if the network will train using only
@@ -28,44 +28,44 @@ for a = 1:6
         case 6
             signal = signal_noise;
     end
-    if (strcmp(SNRstring,'-20') || strcmp(SNRstring,'ALL'))
+%     if (strcmp(SNRstring,'-20') || strcmp(SNRstring,'ALL'))
+%         for i = 1:frames
+%             input = cat(2,input,signal(1,:,i)'); % SNR = -20
+%         end
+%     end
+    if (strcmp(SNR,'-15') || strcmp(SNR,'ALL'))
         for i = 1:frames
-            input = cat(2,input,signal(1,:,i)'); % SNR = -20
+            input = cat(2,input,signal(1,:,i)'); % SNR = -15
         end
     end
-    if (strcmp(SNRstring,'-15') || strcmp(SNRstring,'ALL'))
+    if (strcmp(SNR,'-10') || strcmp(SNR,'ALL'))
         for i = 1:frames
-            input = cat(2,input,signal(2,:,i)'); % SNR = -15
+            input = cat(2,input,signal(2,:,i)'); % SNR = -10
         end
     end
-    if (strcmp(SNRstring,'-10') || strcmp(SNRstring,'ALL'))
+    if (strcmp(SNR,'-5') || strcmp(SNR,'ALL'))
         for i = 1:frames
-            input = cat(2,input,signal(3,:,i)'); % SNR = -10
+            input = cat(2,input,signal(3,:,i)'); % SNR = -5
         end
     end
-    if (strcmp(SNRstring,'-5') || strcmp(SNRstring,'ALL'))
+    if (strcmp(SNR,'0') || strcmp(SNR,'ALL'))
         for i = 1:frames
-            input = cat(2,input,signal(4,:,i)'); % SNR = -5
+            input = cat(2,input,signal(4,:,i)'); % SNR = 0
         end
     end
-    if (strcmp(SNRstring,'0') || strcmp(SNRstring,'ALL'))
+    if (strcmp(SNR,'5') || strcmp(SNR,'ALL'))
         for i = 1:frames
-            input = cat(2,input,signal(5,:,i)'); % SNR = 0
+            input = cat(2,input,signal(5,:,i)'); % SNR = 5
         end
     end
-    if (strcmp(SNRstring,'5') || strcmp(SNRstring,'ALL'))
+    if (strcmp(SNR,'10') || strcmp(SNR,'ALL'))
         for i = 1:frames
-            input = cat(2,input,signal(6,:,i)'); % SNR = 5
+            input = cat(2,input,signal(6,:,i)'); % SNR = 10
         end
     end
-    if (strcmp(SNRstring,'10') || strcmp(SNRstring,'ALL'))
+    if (strcmp(SNR,'15') || strcmp(SNR,'ALL'))
         for i = 1:frames
-            input = cat(2,input,signal(7,:,i)'); % SNR = 10
-        end
-    end
-    if (strcmp(SNRstring,'15') || strcmp(SNRstring,'ALL'))
-        for i = 1:frames
-            input = cat(2,input,signal(8,:,i)'); % SNR = 15
+            input = cat(2,input,signal(7,:,i)'); % SNR = 15
         end
     end
 end

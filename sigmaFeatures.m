@@ -12,5 +12,6 @@ for i = 1:length(SNR)
      result(i,7,1) = std(featuresMatrix(i,7,:));
      result(i,8,1) = std(featuresMatrix(i,8,:));
      result(i,9,1) = std(featuresMatrix(i,9,:));
+     result(i,10,1) = std(featuresMatrix(i,10,:));
 end
 end

@@ -29,11 +29,12 @@ end
 dataIn = randi([0 1],n,1);                                  % Create random message
 
 % Modulation
-dataMod = pskmod(dataIn,M);                                 % Modulate signal
 initPhase = pi*(2*rand(1)-1);                               % Generate random phase
 
 if(phaseFlag == 1)
-    dataMod = dataMod.*exp(1i*initPhase);                   % Apply random phase
+    dataMod = pskmod(dataIn,M,initPhase);                   % Modulate signal
+else
+    dataMod = pskmod(dataIn,M);                             % Modulate signal
 end
 
 % Transmission filter
