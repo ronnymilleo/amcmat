@@ -9,8 +9,8 @@ MSGID = 'signal:hilbert:Ignore';
 warning('off', MSGID)
 %% Initial values
 snrVector = [-15 -10 -5 0 5 10 15];                 % SNR vector
-frames = 10000;                                      % Number of frames
-frameSize = 1024;                                   % Frame size in bits
+frames = 1000;                                      % Number of frames
+frameSize = 4096;                                   % Frame size in bits
 featuresVector = [1 2 3 4 5 6 7 8 9 10];            % Features selection vector
 numSamplesPerSymbol = 8;                            % Oversampling factor
 % Modulation parameters
@@ -41,9 +41,10 @@ toc
 % Convert vector to string with '-' replacing spaces
 t = datetime('now');
 DateString = datestr(t);
-name = strcat('ftData-',DateString);
-
-save(name, 'name',...
+str = strrep(DateString,' ','-');
+str = strrep(str,':','-');
+name = strcat('ftData-',str,'.mat');
+save(name, 'name', ...
     'signal_qam4', ...
     'signal_qam16', ...
     'signal_psk2', ...
@@ -62,19 +63,24 @@ close(f)
 %% Plot
 % 1 - Desvio padrao do valor absoluto da componente nao-linear da fase instantanea
 % 2 - Desvio padrao da componente nao-linear da fase instantanea
+%
 % 3 - Desvio padrao do valor absoluto da componente nao-linear da frequência instantanea
 % 4 - Desvio padrao da componente nao-linear da frequência instantanea
+%
 % 5 - Curtose
+%
 % 6 - Valor maximo da densidade espectral de potencia da amplitude instantanea normalizada e centralizada
+%
 % 7 - Media da amplitude instantanea normalizada centralizada ao quadrado
 % 8 - Desvio padrao do valor absoluto da amplitude instantanea normalizada e centralizada
 % 9 - Desvio padrao da amplitude instantanea normalizada e centralizada
-% 10 - Assimetria (Skewness)
 
-% close all
-% plotVector = [3 4];
-% fontSize = 12;
-% plotFeatures(plotVector,fontSize,snrVector,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
+% 10 - Assimetria (Skewness)
+%%
+close all
+plotVector = [3 4];
+fontSize = 12;
+plotFeatures(plotVector,fontSize,snrVector,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
 %% Plot das medias
 close all
 plotVector = [3 4];
@@ -85,11 +91,12 @@ plotMeanFeatures(plotVector,fontSize,snrVector,signal_qam4,signal_qam16,signal_p
 dataFile = name; % Specify the calculated features file name to train
 SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
 % 'ALL' is default for training
-hiddenLayer = [10 6]; % Config the setup of hidden layers
+hiddenLayer = [18 12 6]; % Config the setup of hidden layers
 isPlot = 1; % Do you want to plot? It's confusion matrix
+frames = 1000;
 forgeNetwork(dataFile,SNRstring,isPlot,frames,hiddenLayer);
 %% Evaluate
 dataFile = name; % Specify the calculated features file name to evaluate
-SNRstring = '-5'; % Can be set to '-15','-10','-5','0','5','10' and '15'
-netFile = cat(2,'netConfig-10-6-',name); % Specify the created network file name to evaluate
+SNRstring = 'ALL'; % Can be set to '-15','-10','-5','0','5','10' and '15'
+netFile = cat(2,'netConfig-18-12-6-',name); % Specify the created network file name to evaluate
 useNetwork(dataFile,netFile,frames,SNRstring) % Do the work

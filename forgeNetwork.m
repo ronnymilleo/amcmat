@@ -28,11 +28,6 @@ for a = 1:6
         case 6
             signal = signal_noise;
     end
-%     if (strcmp(SNRstring,'-20') || strcmp(SNRstring,'ALL'))
-%         for i = 1:frames
-%             input = cat(2,input,signal(1,:,i)'); % SNR = -20
-%         end
-%     end
     if (strcmp(SNR,'-15') || strcmp(SNR,'ALL'))
         for i = 1:frames
             input = cat(2,input,signal(1,:,i)'); % SNR = -15
@@ -78,16 +73,15 @@ target = [ones(1, frames*n) zeros(1, 5*frames*n)
       zeros(1, 5*frames*n) ones(1,frames*n)];
 %%
 % RNA creation
-% hiddenLayer = [10,6];
-trainingFunction = 'trainbr';
+%trainingFunction = 'trainbr'; Default is faster
 transferFunction = 'softmax';
-net = patternnet(hiddenLayer,trainingFunction);
+net = patternnet(hiddenLayer);
 net.layers{length(hiddenLayer)+1}.transferFcn = transferFunction;
-net.performFcn = 'mse';
-net.divideParam.trainRatio = 70/100;
-net.divideParam.valRatio = 15/100;
-net.divideParam.testRatio = 15/100;
-net = train(net, input, target);
+%net.performFcn = 'mse'; Default is better
+net.divideParam.trainRatio = 80/100;
+net.divideParam.valRatio = 0/100; % Takes out validation
+net.divideParam.testRatio = 20/100;
+net = train(net, input, target,'useGPU','yes'); % GPU speeds up sim.
 output = net(input);
 performance = perform(net,target,output);
 config0 = strrep(num2str(hiddenLayer),'   ','-');
