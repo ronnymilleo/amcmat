@@ -1,4 +1,4 @@
-function [dataOut] = FSK2(frameSize,numSamplesPerSymbol,SNR,noiseFlag,ampFlag)
+function [dataOut] = FSK2(frameSize,numSamplesPerSymbol,SNR,VIA,CN)
 %% Signal generation
 M = 2; % Number of symbols
 n = frameSize; % Frame size in bits
@@ -8,10 +8,10 @@ Fs = M*numSamplesPerSymbol; % Sampling frequency
 % Default settings
 switch nargin
     case 3
-        noiseFlag = 1;
-        ampFlag = 1;
+        VIA = 1;
+        CN = 1;
     case 4
-        ampFlag = 1;
+        CN = 1;
 end
 
 % Message
@@ -28,7 +28,7 @@ dataMod = fskmod(dataIn,M,freqSep,numSamplesPerSymbol, Fs);
 
 txSignal = dataMod;
 
-if(noiseFlag == 1)
+if(CN)
     rxSignal = awgn(txSignal,SNR,'measured');
 else
     rxSignal = txSignal;
@@ -43,7 +43,7 @@ end
 
 dataOut = rxSignal/rms(rxSignal);
 
-if(ampFlag)
+if(VIA)
     amp = randi([1 10],1);
     dataOut = dataOut./amp;
 end

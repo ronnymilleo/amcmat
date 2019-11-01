@@ -1,6 +1,6 @@
-function [dataOut] = PSK8(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag,ampFlag)
+function [dataOut] = PSK8(frameSize,numSamplesPerSymbol,SNR,VIP,VIA,CN,isPlot)
 %% Signal generation
-M = 8;                                                      % Constelation size
+M = 2;                                                      % Constelation size
 k = log2(M);                                                % Bits per symbol
 n = k*(frameSize+1);                                        % Frame size in bits
 span = 10;                                                  % Filter config
@@ -10,37 +10,37 @@ rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Filter creation
 % Default settings
 switch nargin
     case 3
-        phaseFlag = 1;
-        noiseFlag = 1;
-        plotFlag = 0;
-        ampFlag = 1;
+        VIP = 1;
+        VIA = 1;
+        CN = 1;
+        isPlot = 0;
     case 4
-        noiseFlag = 1;
-        plotFlag = 0;
-        ampFlag = 1;
+        VIA = 1;
+        CN = 1;
+        isPlot = 0;
     case 5
-        plotFlag = 0;
-        ampFlag = 1;
+        CN = 1;
+        isPlot = 0;
     case 6
-        ampFlag = 1;
+        isPlot = 0;
 end
 
 % Message
-dataIn = randi([0 1],n,1);                                  % Create random message
+dataIn = randi([0 M-1],n,1);                                  % Create random message
 
-% Modulation
 initPhase = pi*(2*rand(1)-1);                               % Generate random phase
 
-if(phaseFlag == 1)
+if(VIP)
     dataMod = pskmod(dataIn,M,initPhase);                   % Modulate signal
 else
+    % Modulation
     dataMod = pskmod(dataIn,M);                             % Modulate signal
 end
 
 % Transmission filter
 txSignal = upfirdn(dataMod,rrcFilter,numSamplesPerSymbol,1);% Transmitted signal
 
-if(noiseFlag == 1)
+if(CN)
     rxSignal = awgn(txSignal,SNR,'measured');
 else
     rxSignal = txSignal;
@@ -57,7 +57,7 @@ end
 rxSignal = rxSignal(span*numSamplesPerSymbol/2+1:end-span*numSamplesPerSymbol/2-1);
 
 % Plot
-if(plotFlag == 1)
+if(isPlot)
     sPlotFig = scatterplot(rxSignal,1,0,'g.');
     hold on
     scatterplot(dataMod,1,0,'k*',sPlotFig)
@@ -65,7 +65,7 @@ end
 
 dataOut = rxSignal/rms(rxSignal);
 
-if(ampFlag)
+if(VIA)
     amp = randi([1 10],1);
     dataOut = dataOut./amp;
 end

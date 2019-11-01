@@ -1,4 +1,4 @@
-function [dataOut] = QAM64(frameSize,numSamplesPerSymbol,SNR,phaseFlag,noiseFlag,plotFlag,ampFlag)
+function [dataOut] = QAM64(frameSize,numSamplesPerSymbol,SNR,VIP,VIA,CN,isPlot)
 %% Signal generation
 M = 64;                                                     % Constelation size
 k = log2(M);                                                % Bits per symbol
@@ -10,19 +10,19 @@ rrcFilter = rcosdesign(rolloff, span, numSamplesPerSymbol); % Filter creation
 % Default settings
 switch nargin
     case 3
-        phaseFlag = 1;
-        noiseFlag = 1;
-        plotFlag = 0;
-        ampFlag = 1;
+        VIP = 1; % Variable initial phase
+        VIA = 0; % Variable initial amplitude
+        CN = 1; % Channel noise
+        isPlot = 0; % Modulation plot
     case 4
-        noiseFlag = 1;
-        plotFlag = 0;
-        ampFlag = 1;
+        VIA = 0;
+        CN = 1;
+        isPlot = 0;
     case 5
-        plotFlag = 0;
-        ampFlag = 1;
+        CN = 1;
+        isPlot = 0;
     case 6
-        ampFlag = 1;
+        isPlot = 0;
 end
 
 % Message
@@ -32,14 +32,14 @@ dataIn = randi([0 M-1],n,1);                                % Create random mess
 dataMod = qammod(dataIn,M, 'UnitAveragePower', true);       % Modulate signal
 initPhase = pi*(2*rand(1)-1);                               % Generate random phase
 
-if(phaseFlag == 1)
+if(VIP)
     dataMod = dataMod.*exp(1i*initPhase);                   % Add random phase
 end
 
 % Transmission filter
 txSignal = upfirdn(dataMod,rrcFilter,numSamplesPerSymbol,1);% Transmitted signal
 
-if(noiseFlag == 1)
+if(CN)
     rxSignal = awgn(txSignal,SNR,'measured');
 else
     rxSignal = txSignal;
@@ -56,7 +56,7 @@ end
 rxSignal = rxSignal(span*numSamplesPerSymbol/2+1:end-span*numSamplesPerSymbol/2-1);
 
 % Plot
-if(plotFlag == 1)
+if(isPlot)
     sPlotFig = scatterplot(rxSignal,1,0,'g.');
     hold on
     scatterplot(dataMod,1,0,'k*',sPlotFig)
@@ -64,7 +64,7 @@ end
 
 dataOut = rxSignal/rms(rxSignal);
 
-if(ampFlag)
+if(VIA)
     amp = randi([1 10],1);
     dataOut = dataOut./amp;
 end

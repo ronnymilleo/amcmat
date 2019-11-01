@@ -95,7 +95,7 @@ config0 = strrep(num2str(hiddenLayer),'   ','-');
 config1 = strrep(config0,'  ','-');
 config2 = strrep(config1,' ','-');
 name = strcat('netConfig','-',config2,'-',file);
-save(name,'net')
+save(name,'net','errors','performance')
 %% Generate a function for evaluating the RNA with random data
 genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
 %%
