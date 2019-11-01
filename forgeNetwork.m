@@ -89,13 +89,12 @@ net.divideParam.valRatio = 15/100;
 net.divideParam.testRatio = 15/100;
 net = train(net, input, target);
 output = net(input);
-errors = gsubtract(target,output);
 performance = perform(net,target,output);
 config0 = strrep(num2str(hiddenLayer),'   ','-');
 config1 = strrep(config0,'  ','-');
 config2 = strrep(config1,' ','-');
 name = strcat('netConfig','-',config2,'-',file);
-save(name,'net','errors','performance')
+save(name,'net','performance')
 %% Generate a function for evaluating the RNA with random data
 genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
 %%
