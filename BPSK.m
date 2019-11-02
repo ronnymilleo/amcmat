@@ -1,4 +1,4 @@
-function [dataOut] = PSK2(frameSize,numSamplesPerSymbol,SNR,VIP,VIA,CN,isPlot)
+function [dataOut] = BPSK(frameSize,numSamplesPerSymbol,SNR,VIP,VIA,CN,isPlot)
 %% Signal generation
 M = 2;                                                      % Constelation size
 k = log2(M);                                                % Bits per symbol

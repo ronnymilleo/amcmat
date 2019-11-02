@@ -1,23 +1,16 @@
-function [] = useNetwork(file,netFile,frames,SNR)
+function [] = useNetwork(net,frames,SNR,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% Use existing network
 % Allocation
-signal_qam4 = [];
-signal_qam16 = [];
-signal_psk2 = [];
-signal_fsk2 = [];
-signal_fsk4 = [];
-signal_noise = [];
-load(file,'signal_qam4','signal_qam16','signal_psk2','signal_fsk2','signal_fsk4','signal_noise')
 input = [];
 signal = [];
 for a = 1:6
     switch(a)
         case 1
-            signal = signal_qam4;
+            signal = signal_bpsk;
         case 2
-            signal = signal_qam16;
+            signal = signal_qpsk;
         case 3
-            signal = signal_psk2;
+            signal = signal_qam16;
         case 4
             signal = signal_fsk2;
         case 5
@@ -67,7 +60,7 @@ for a = 1:6
     end
 end
 if(strcmp(SNR,'ALL'))
-    [m,n] = size(signal_qam4(:,:,1)');
+    [m,n] = size(signal_bpsk(:,:,1)');
     target = [ones(1, frames*n) zeros(1, 5*frames*n)
           zeros(1, frames*n) ones(1,frames*n) zeros(1, 4*frames*n)
           zeros(1, 2*frames*n) ones(1,frames*n) zeros(1,3*frames*n)
@@ -75,7 +68,7 @@ if(strcmp(SNR,'ALL'))
           zeros(1, 4*frames*n) ones(1,frames*n) zeros(1,frames*n)
           zeros(1, 5*frames*n) ones(1,frames*n)];
 else
-    [m,n] = size(signal_qam4(1,:,1)');
+    [m,n] = size(signal_bpsk(1,:,1)');
     target = [ones(1, frames*n) zeros(1, 5*frames*n)
           zeros(1, frames*n) ones(1,frames*n) zeros(1, 4*frames*n)
           zeros(1, 2*frames*n) ones(1,frames*n) zeros(1,3*frames*n)
@@ -83,7 +76,6 @@ else
           zeros(1, 4*frames*n) ones(1,frames*n) zeros(1,frames*n)
           zeros(1, 5*frames*n) ones(1,frames*n)];
 end
-load(netFile)
 genFunction(net, 'amcFcn', 'MatrixOnly', 'yes'); % Update network function
 output = amcFcn(input);
 performance = perform(net,target,output);
@@ -91,7 +83,7 @@ str = strcat('Network performance: ',num2str(performance));
 disp(str)
 figure;plotconfusion(target,output);
 ax=gca;
-ticks = {'QAM4','QAM16','PSK2','FSK2','FSK4','WGN',''};
+ticks = {'BPSK','QPSK','QAM16','FSK2','FSK4','WGN',''};
 set(ax,'XTickLabel',ticks);
 set(ax,'YTickLabel',ticks);
 end

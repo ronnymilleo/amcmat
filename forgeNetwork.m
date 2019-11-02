@@ -4,23 +4,23 @@ function forgeNetwork(file,SNR,isPlot,frames,hiddenLayer)
 % SNR is the string setting to select if the network will train using only
 % 1 measurement of SNR or all of them, use 'ALL'
 % isPlot is the plot flag, 1 == plot
-signal_qam4 = [];
-signal_qam16 = [];
-signal_psk2 = [];
-signal_fsk2 = [];
-signal_fsk4 = [];
-signal_noise = [];
-load(file,'signal_qam4','signal_qam16','signal_psk2','signal_fsk2','signal_fsk4','signal_noise')
+% signal_bpsk = [];
+% signal_qpsk = [];
+% signal_qam16 = [];
+% signal_fsk2 = [];
+% signal_fsk4 = [];
+% signal_noise = [];
+load(file,'signal_bpsk','signal_qpsk','signal_qam16','signal_fsk2','signal_fsk4','signal_noise')
 input = [];
 signal = [];
 for a = 1:6
     switch(a)
         case 1
-            signal = signal_qam4;
+            signal = signal_bpsk;
         case 2
-            signal = signal_qam16;
+            signal = signal_qpsk;
         case 3
-            signal = signal_psk2;
+            signal = signal_qam16;
         case 4
             signal = signal_fsk2;
         case 5
@@ -64,7 +64,7 @@ for a = 1:6
         end
     end
 end
-[m,n] = size(signal_qam4(:,:,1)');
+[m,n] = size(signal_bpsk(:,:,1)');
 target = [ones(1, frames*n) zeros(1, 5*frames*n)
       zeros(1, frames*n) ones(1,frames*n) zeros(1, 4*frames*n)
       zeros(1, 2*frames*n) ones(1,frames*n) zeros(1,3*frames*n)
@@ -81,13 +81,15 @@ net.layers{length(hiddenLayer)+1}.transferFcn = transferFunction;
 net.divideParam.trainRatio = 80/100;
 net.divideParam.valRatio = 0/100; % Takes out validation
 net.divideParam.testRatio = 20/100;
+net.trainParam.epochs = 5000;
 net = train(net, input, target,'useGPU','yes'); % GPU speeds up sim.
 output = net(input);
 performance = perform(net,target,output);
 config0 = strrep(num2str(hiddenLayer),'   ','-');
 config1 = strrep(config0,'  ','-');
 config2 = strrep(config1,' ','-');
-name = strcat('netConfig','-',config2,'-',file);
+performance_str = strrep(num2str(performance),'0.','p');
+name = strcat('.\Nets\',performance_str,'-',file(8:end),'-','net','-',config2);
 save(name,'net','performance')
 %% Generate a function for evaluating the RNA with random data
 genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
@@ -95,7 +97,7 @@ genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
 if(isPlot)
     figure;plotconfusion(target,output);
     ax=gca;
-    ticks = {'QAM4','QAM16','PSK2','FSK2','FSK4','WGN',''};
+    ticks = {'BPSK','QPSK','QAM16','FSK2','FSK4','WGN',''};
     set(ax,'XTickLabel',ticks);
     set(ax,'YTickLabel',ticks);
     view(net)

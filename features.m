@@ -25,12 +25,12 @@ end
 
 for i = 1:length(snrVector)
     for j = 1:nFrames
-        if(strcmp(modulation,'QAM4'))
-            inputModulationSignal = QAM4(frameSize,numSamplesPerSymbol,snrVector(i),VIP,VIA,CN,isPlot);
+        if(strcmp(modulation,'QPSK'))
+            inputModulationSignal = QPSK(frameSize,numSamplesPerSymbol,snrVector(i),VIP,VIA,CN,isPlot);
         elseif(strcmp(modulation,'QAM16'))
             inputModulationSignal = QAM16(frameSize,numSamplesPerSymbol,snrVector(i),VIP,VIA,CN,isPlot);
-        elseif(strcmp(modulation,'PSK2'))
-            inputModulationSignal = PSK2(frameSize,numSamplesPerSymbol,snrVector(i),VIP,VIA,CN,isPlot);
+        elseif(strcmp(modulation,'BPSK'))
+            inputModulationSignal = BPSK(frameSize,numSamplesPerSymbol,snrVector(i),VIP,VIA,CN,isPlot);
         elseif(strcmp(modulation,'FSK2'))
             inputModulationSignal = FSK2(frameSize,numSamplesPerSymbol,snrVector(i),VIA,CN);
         elseif(strcmp(modulation,'FSK4'))

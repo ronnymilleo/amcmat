@@ -1,4 +1,4 @@
-function [dataOut] = QAM4(frameSize,numSamplesPerSymbol,SNR,VIP,VIA,CN,isPlot)
+function [dataOut] = QPSK(frameSize,numSamplesPerSymbol,SNR,VIP,VIA,CN,isPlot)
 %% Signal generation
 M = 4;                                                      % Constelation size
 n = (frameSize+1);                                          % Frame size in bits
@@ -28,11 +28,12 @@ end
 dataIn = randi([0 M-1],n,1);                                % Create random message
 
 % Modulation
-dataMod = qammod(dataIn,M, 'UnitAveragePower', true);       % Modulate signal
 initPhase = pi*(2*rand(1)-1);                               % Generate random phase
 
 if(VIP)
-    dataMod = dataMod.*exp(1i*initPhase);                   % Add random phase
+    dataMod = pskmod(dataIn,M,initPhase);                   % Modulate signal
+else
+    dataMod = pskmod(dataIn,M);                             % Modulate signal
 end
 
 % Transmission filter

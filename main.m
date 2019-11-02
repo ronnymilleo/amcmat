@@ -19,35 +19,39 @@ VIA = 0;        % Variable initial amplitude
 CN = 1;         % Channel noise
 isPlot = 0;     % Modulation plot (scatterplot)
 %% Generate and extract characteristics from signals 
-f = waitbar(0,'Please wait...');
+disp('Starting. Please wait...');
 tic
-signal_qam4 = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'QAM4',VIP,VIA,CN,isPlot);
-waitbar(1/6,f,'QAM4 done.');
+nFeatures = length(featuresVector);
+fprintf('Extracting %d BPSK features...\n',nFeatures)
+signal_bpsk = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'BPSK',VIP,VIA,CN,isPlot);
+disp('BPSK features extracted (1/6)')
+fprintf('Extracting %d QPSK features...\n',nFeatures)
+signal_qpsk = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'QPSK',VIP,VIA,CN,isPlot);
+disp(strcat('QAM4 features extracted (2/6)'))
+fprintf('Extracting %d QAM16 features...\n',nFeatures)
 signal_qam16 = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'QAM16',VIP,VIA,CN,isPlot);
-waitbar(2/6,f,'QAM16 done.');
-signal_psk2 = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'PSK2',VIP,VIA,CN,isPlot);
-waitbar(3/6,f,'PSK2 done.');
+disp(strcat('QAM16 features extracted (3/6)'))
+fprintf('Extracting %d FSK2 features...\n',nFeatures)
 signal_fsk2 = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'FSK2',VIP,VIA,CN);
-waitbar(4/6,f,'FSK2 done.');
+disp(strcat('FSK2 features extracted (4/6)'))
+fprintf('Extracting %d FSK4 features...\n',nFeatures)
 signal_fsk4 = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'FSK4',VIP,VIA,CN);
-waitbar(5/6,f,'FSK4 done.');
+disp(strcat('FSK4 features extracted (5/6)'))
+fprintf('Extracting %d WGN features...\n',nFeatures)
 signal_noise = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'noise');
-waitbar(6/6,f,'Noise done.');
-pause(0.5)
-waitbar(1,f,'Finishing...');
-pause(0.5)
+disp(strcat('WGN features extracted (6/6)'))
 toc
-
+disp(strcat('Done. Saving...'))
 % Convert vector to string with '-' replacing spaces
 t = datetime('now');
 DateString = datestr(t);
 str = strrep(DateString,' ','-');
 str = strrep(str,':','-');
-name = strcat('ftData-',str,'.mat');
+name = strcat('.\Data\ftData-',str);
 save(name, 'name', ...
-    'signal_qam4', ...
+    'signal_bpsk', ...
+    'signal_qpsk', ...
     'signal_qam16', ...
-    'signal_psk2', ...
     'signal_fsk2', ...
     'signal_fsk4', ...
     'signal_noise', ...
@@ -59,7 +63,7 @@ save(name, 'name', ...
     'CN', ...
     'VIP', ...
     'VIA');
-close(f)
+disp(strcat('Finished.'))
 %% Plot
 % 1 - Desvio padrao do valor absoluto da componente nao-linear da fase instantanea
 % 2 - Desvio padrao da componente nao-linear da fase instantanea
@@ -78,14 +82,15 @@ close(f)
 % 10 - Assimetria (Skewness)
 %%
 close all
-plotVector = [3 4];
+plotVector = [3 4 10];
 fontSize = 12;
-plotFeatures(plotVector,fontSize,snrVector,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
+nLines = 1;
+plotFeatures(plotVector,nLines,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% Plot das medias
 close all
-plotVector = [3 4];
+plotVector = [3 4 10];
 fontSize = 12;
-plotMeanFeatures(plotVector,fontSize,snrVector,signal_qam4,signal_qam16,signal_psk2,signal_fsk2,signal_fsk4,signal_noise)
+plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% RNA
 %% Train
 dataFile = name; % Specify the calculated features file name to train
@@ -93,10 +98,8 @@ SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
 % 'ALL' is default for training
 hiddenLayer = [18 12 6]; % Config the setup of hidden layers
 isPlot = 1; % Do you want to plot? It's confusion matrix
-frames = 1000;
+%frames = 1000;
 forgeNetwork(dataFile,SNRstring,isPlot,frames,hiddenLayer);
 %% Evaluate
-dataFile = name; % Specify the calculated features file name to evaluate
 SNRstring = 'ALL'; % Can be set to '-15','-10','-5','0','5','10' and '15'
-netFile = cat(2,'netConfig-18-12-6-',name); % Specify the created network file name to evaluate
-useNetwork(dataFile,netFile,frames,SNRstring) % Do the work
+useNetwork(net,frames,SNRstring,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise) % Do the work
