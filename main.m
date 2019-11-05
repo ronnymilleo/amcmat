@@ -8,14 +8,25 @@ clc
 MSGID = 'signal:hilbert:Ignore';
 warning('off', MSGID)
 %% Initial values
-snrVector = [-15 -10 -5 0 5 10 15];                 % SNR vector
-frames = 1000;                                      % Number of frames
+frames = 5000;                                      % Number of frames
 frameSize = 4096;                                   % Frame size in bits
 featuresVector = [1 2 3 4 5 6 7 8 9 10];            % Features selection vector
 numSamplesPerSymbol = 8;                            % Oversampling factor
+
+% Channel settings
+snrVector = -14:2:14;                               % SNR vector
+pathDelays = (0:5:15)*1e-6;                         % seconds
+avgPathGains = [0 -3 -6 -9];                        % dB
+maxDopplerShift = 50;                               % Hz
+rayleightSettings = struct(...
+    'Fs',numSamplesPerSymbol, ...
+    'pathDelays',pathDelays, ...
+    'avgPathGains',avgPathGains, ...
+    'fD',maxDopplerShift);
+
 % Modulation parameters
 VIP = 1;        % Variable initial phase
-VIA = 0;        % Variable initial amplitude
+VIA = 1;        % Variable initial amplitude
 CN = 1;         % Channel noise
 isPlot = 0;     % Modulation plot (scatterplot)
 %% Generate and extract characteristics from signals 
@@ -84,7 +95,7 @@ disp(strcat('Finished.'))
 close all
 plotVector = [3 4 10];
 fontSize = 12;
-nLines = 1;
+nLines = 20;
 plotFeatures(plotVector,nLines,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% Plot das medias
 close all
@@ -96,10 +107,10 @@ plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qa
 dataFile = name; % Specify the calculated features file name to train
 SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
 % 'ALL' is default for training
-hiddenLayer = [18 12 6]; % Config the setup of hidden layers
+hiddenLayer = [10 6]; % Config the setup of hidden layers
 isPlot = 1; % Do you want to plot? It's confusion matrix
 %frames = 1000;
-forgeNetwork(dataFile,SNRstring,isPlot,frames,hiddenLayer);
+forgeNetwork(dataFile,snrVector,SNRstring,isPlot,frames,hiddenLayer);
 %% Evaluate
-SNRstring = 'ALL'; % Can be set to '-15','-10','-5','0','5','10' and '15'
+SNRstring = '-5'; % Can be set to '-15','-10','-5','0','5','10' and '15'
 useNetwork(net,frames,SNRstring,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise) % Do the work
