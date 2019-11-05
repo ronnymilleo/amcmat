@@ -1,45 +1,25 @@
-function [result] = features(snrVector,nFrames,frameSize,featuresVector,numSamplesPerSymbol,modulation,VIP,VIA,CN,isPlot)
+function [result] = features(modulation,snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings)
 %% Features
 % Matrix allocation
-result = zeros(length(snrVector),length(featuresVector),length(nFrames));
-
-Rs = 1; % Symbol Rate
-
-% Default settings
-switch nargin
-    case 6
-        VIP = 1; % Variable initial phase
-        VIA = 0; % Variable initial amplitude
-        CN = 1; % Channel noise
-        isPlot = 0; % Modulation plot
-    case 7
-        VIA = 0;
-        CN = 1;
-        isPlot = 0;
-    case 8
-        CN = 1;
-        isPlot = 0;
-    case 9
-        isPlot = 0;
-end
+result = zeros(length(snrVector),length(featuresVector),length(frames));
 
 for i = 1:length(snrVector)
-    for j = 1:nFrames
+    for j = 1:frames
         if(strcmp(modulation,'QPSK'))
-            inputModulationSignal = QPSK(frameSize,numSamplesPerSymbol,snrVector(i),VIP,VIA,CN,isPlot);
+            inputModulationSignal = PSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
         elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM16(frameSize,numSamplesPerSymbol,snrVector(i),VIP,VIA,CN,isPlot);
+            inputModulationSignal = QAM(16,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
         elseif(strcmp(modulation,'BPSK'))
-            inputModulationSignal = BPSK(frameSize,numSamplesPerSymbol,snrVector(i),VIP,VIA,CN,isPlot);
+            inputModulationSignal = PSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
         elseif(strcmp(modulation,'FSK2'))
-            inputModulationSignal = FSK2(frameSize,numSamplesPerSymbol,snrVector(i),VIA,CN);
+            inputModulationSignal = FSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
         elseif(strcmp(modulation,'FSK4'))
-            inputModulationSignal = FSK4(frameSize,numSamplesPerSymbol,snrVector(i),VIA,CN);
+            inputModulationSignal = FSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
         else
             inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
         end
 
-        instValuesStruct = instantaneousValues(inputModulationSignal,Rs,8);
+        instValuesStruct = instantaneousValues(inputModulationSignal,symbolRate,8);
         
         x = 1;
         

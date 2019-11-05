@@ -8,48 +8,51 @@ clc
 MSGID = 'signal:hilbert:Ignore';
 warning('off', MSGID)
 %% Initial values
-frames = 5000;                                      % Number of frames
-frameSize = 4096;                                   % Frame size in bits
-featuresVector = [1 2 3 4 5 6 7 8 9 10];            % Features selection vector
-numSamplesPerSymbol = 8;                            % Oversampling factor
+% Main vectors
+snrVector = -15:5:15;                           % SNR vector
+featuresVector = [1 2 3 4 5 6 7 8 9 10];        % Features selection vector
 
-% Channel settings
-snrVector = -14:2:14;                               % SNR vector
-pathDelays = (0:5:15)*1e-6;                         % seconds
-avgPathGains = [0 -3 -6 -9];                        % dB
-maxDopplerShift = 50;                               % Hz
-rayleightSettings = struct(...
-    'Fs',numSamplesPerSymbol, ...
-    'pathDelays',pathDelays, ...
-    'avgPathGains',avgPathGains, ...
-    'fD',maxDopplerShift);
+% Main config
+frames = 100;                                   % Number of frames
+frameSize = 4096;                               % Frame size in bits
+symbolRate = 1e6;                               % Symbol rate
+numSamplesPerSymbol = 8;                        % Oversampling factor
 
 % Modulation parameters
-VIP = 1;        % Variable initial phase
-VIA = 1;        % Variable initial amplitude
-CN = 1;         % Channel noise
-isPlot = 0;     % Modulation plot (scatterplot)
+modParameters = struct(...
+    'RP', 1, ... % Activade variable initial phase / Random phase
+    'RA', 1, ... % Activade variable initial amplitude / Random amplitude
+    'CN', 1, ... % Activate channel noise + rayleigh
+    'isPlot', 0);% Activate modulation plot (scatterplot + spectrum)
+
+% Rayleigh channel settings
+rayleighSettings = struct(...
+    'activate',0,...
+    'Fs',numSamplesPerSymbol*symbolRate, ...    % Sampling frequency
+    'pathDelays',(0:5:15)*1e-6, ...             % Path delay in seconds
+    'avgPathGains',[0 -3 -6 -9], ...            % Path gains in dB
+    'maxDopplerShift',1/1000);                  % Doppler shift in Hz
 %% Generate and extract characteristics from signals 
 disp('Starting. Please wait...');
 tic
 nFeatures = length(featuresVector);
 fprintf('Extracting %d BPSK features...\n',nFeatures)
-signal_bpsk = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'BPSK',VIP,VIA,CN,isPlot);
+signal_bpsk = features('BPSK',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
 disp('BPSK features extracted (1/6)')
 fprintf('Extracting %d QPSK features...\n',nFeatures)
-signal_qpsk = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'QPSK',VIP,VIA,CN,isPlot);
+signal_qpsk = features('QPSK',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
 disp(strcat('QAM4 features extracted (2/6)'))
 fprintf('Extracting %d QAM16 features...\n',nFeatures)
-signal_qam16 = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'QAM16',VIP,VIA,CN,isPlot);
+signal_qam16 = features('QAM16',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
 disp(strcat('QAM16 features extracted (3/6)'))
 fprintf('Extracting %d FSK2 features...\n',nFeatures)
-signal_fsk2 = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'FSK2',VIP,VIA,CN);
+signal_fsk2 = features('FSK2',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
 disp(strcat('FSK2 features extracted (4/6)'))
 fprintf('Extracting %d FSK4 features...\n',nFeatures)
-signal_fsk4 = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'FSK4',VIP,VIA,CN);
+signal_fsk4 = features('FSK4',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
 disp(strcat('FSK4 features extracted (5/6)'))
 fprintf('Extracting %d WGN features...\n',nFeatures)
-signal_noise = features(snrVector,frames,frameSize,featuresVector,numSamplesPerSymbol,'noise');
+signal_noise = features('noise',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
 disp(strcat('WGN features extracted (6/6)'))
 toc
 disp(strcat('Done. Saving...'))
@@ -68,12 +71,12 @@ save(name, 'name', ...
     'signal_noise', ...
     'frames', ...
     'frameSize',...
-    'featuresVector',...
-    'snrVector', ...
+    'symbolRate',...
     'numSamplesPerSymbol', ...
-    'CN', ...
-    'VIP', ...
-    'VIA');
+    'snrVector', ...
+    'featuresVector', ...
+    'modParameters', ...
+    'rayleighSettings');
 disp(strcat('Finished.'))
 %% Plot
 % 1 - Desvio padrao do valor absoluto da componente nao-linear da fase instantanea
