@@ -13,7 +13,7 @@ snrVector = -15:5:15;                           % SNR vector
 featuresVector = [1 2 3 4 5 6 7 8 9 10];        % Features selection vector
 
 % Main config
-frames = 100;                                   % Number of frames
+frames = 5000;                                   % Number of frames
 frameSize = 4096;                               % Frame size in bits
 symbolRate = 1e6;                               % Symbol rate
 numSamplesPerSymbol = 8;                        % Oversampling factor
@@ -29,9 +29,9 @@ modParameters = struct(...
 rayleighSettings = struct(...
     'activate',0,...
     'Fs',numSamplesPerSymbol*symbolRate, ...    % Sampling frequency
-    'pathDelays',(0:5:15)*1e-6, ...             % Path delay in seconds
-    'avgPathGains',[0 -3 -6 -9], ...            % Path gains in dB
-    'maxDopplerShift',1/1000);                  % Doppler shift in Hz
+    'pathDelays',(0:5:15)*1e-9, ...             % Path delay in seconds
+    'avgPathGains',[0 -3 -6 -9], ...            % Average path gains in dB
+    'maxDopplerShift',numSamplesPerSymbol*symbolRate/20);               
 %% Generate and extract characteristics from signals 
 disp('Starting. Please wait...');
 tic
@@ -96,13 +96,13 @@ disp(strcat('Finished.'))
 % 10 - Assimetria (Skewness)
 %%
 close all
-plotVector = [3 4 10];
+plotVector = [1 2 3 4];
 fontSize = 12;
 nLines = 20;
 plotFeatures(plotVector,nLines,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% Plot das medias
 close all
-plotVector = [3 4 10];
+plotVector = [1 2 3 4];
 fontSize = 12;
 plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% RNA
@@ -115,5 +115,5 @@ isPlot = 1; % Do you want to plot? It's confusion matrix
 %frames = 1000;
 forgeNetwork(dataFile,snrVector,SNRstring,isPlot,frames,hiddenLayer);
 %% Evaluate
-SNRstring = '-5'; % Can be set to '-15','-10','-5','0','5','10' and '15'
+SNRstring = 'ALL'; % Can be set to '-15','-10','-5','0','5','10' and '15'
 useNetwork(net,frames,SNRstring,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise) % Do the work

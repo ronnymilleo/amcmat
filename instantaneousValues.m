@@ -1,7 +1,7 @@
-function [outputStruct] = instantaneousValues(inputVector, Fs, numSamplesPerSymbol)
-h = hilbert(inputVector);
-instPhase = unwrap(angle(h));
-instFreq = (Fs/numSamplesPerSymbol)/(2*pi)*diff(unwrap(angle(h)));
+function [outputStruct] = instantaneousValues(inputVector, Fs)
+h = hilbert(inputVector,length(inputVector));
+instPhase = angle(h);
+instFreq = (Fs)/(2*pi)*diff(unwrap(angle(h)));
 instFreq = (instFreq - mean(instFreq))/Fs;
 instAbs = abs(inputVector);
 instCNAbs = instAbs/mean(instAbs) - 1;

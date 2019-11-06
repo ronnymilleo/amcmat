@@ -4,6 +4,7 @@ function [result] = features(modulation,snrVector,featuresVector,frames,frameSiz
 result = zeros(length(snrVector),length(featuresVector),length(frames));
 
 for i = 1:length(snrVector)
+    fprintf('Computing features for SNR = %d dB\n',snrVector(i))
     for j = 1:frames
         if(strcmp(modulation,'QPSK'))
             inputModulationSignal = PSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
@@ -19,7 +20,7 @@ for i = 1:length(snrVector)
             inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
         end
 
-        instValuesStruct = instantaneousValues(inputModulationSignal,symbolRate,8);
+        instValuesStruct = instantaneousValues(inputModulationSignal,symbolRate*numSamplesPerSymbol);
         
         x = 1;
         

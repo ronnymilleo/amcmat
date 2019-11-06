@@ -205,7 +205,7 @@ if(find(plotVector == 9))
 end
 %%
 if(find(plotVector == 10))
-    figure(9)
+    figure(10)
     for i = 1:nLines
         hold on
         plot(SNR,A(:,10,i),'Color',BPSKColor)
