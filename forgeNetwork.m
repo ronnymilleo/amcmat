@@ -1,4 +1,4 @@
-function forgeNetwork(file,snrVector,snrString,isPlot,frames,hiddenLayer)
+function [net, performance, tr] = forgeNetwork(file,snrVector,snrString,isPlot,frames,hiddenLayer)
 %% Create a new network using input parameters
 % file is the string name of the file that will be loaded
 % SNR is the string setting to select if the network will train using only
@@ -52,11 +52,11 @@ transferFunction = 'softmax';
 net = patternnet(hiddenLayer);
 net.layers{length(hiddenLayer)+1}.transferFcn = transferFunction;
 %net.performFcn = 'mse'; Default is better
-net.divideParam.trainRatio = 80/100;
+net.divideParam.trainRatio = 70/100;
 net.divideParam.valRatio = 0/100; % Takes out validation
-net.divideParam.testRatio = 20/100;
-net.trainParam.epochs = 5000;
-net = train(net, input, target,'useGPU','yes'); % GPU speeds up sim.
+net.divideParam.testRatio = 30/100;
+net.trainParam.epochs = 10000;
+[net,tr]= train(net, input, target,'useGPU','yes'); % GPU speeds up sim.
 output = net(input);
 performance = perform(net,target,output);
 config0 = strrep(num2str(hiddenLayer),'   ','-');
@@ -64,7 +64,7 @@ config1 = strrep(config0,'  ','-');
 config2 = strrep(config1,' ','-');
 performance_str = strrep(num2str(performance),'0.','p');
 name = strcat('.\Nets\',performance_str,'-',file(8:end),'-','net','-',config2);
-save(name,'net','performance')
+save(name,'net','performance','tr')
 %% Generate a function for evaluating the RNA with random data
 genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
 %%
