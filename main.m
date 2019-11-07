@@ -14,7 +14,7 @@ featuresVector = [1 2 3 4 5 6 7 8 9 10];        % Features selection vector
 
 % Main config
 frames = 5000;                                   % Number of frames
-frameSize = 4096;                               % Frame size in bits
+frameSize = 1024;                               % Frame size in bits
 symbolRate = 1e6;                               % Symbol rate
 numSamplesPerSymbol = 8;                        % Oversampling factor
 
