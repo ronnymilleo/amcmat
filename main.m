@@ -5,16 +5,14 @@
 %% Clear memory
 clear 
 clc
-MSGID = 'signal:hilbert:Ignore';
-warning('off', MSGID)
 %% Initial values
 % Main vectors
 snrVector = -15:5:15;                           % SNR vector
 featuresVector = [1 2 3 4 5 6 7 8 9 10];        % Features selection vector
 
 % Main config
-frames = 5000;                                   % Number of frames
-frameSize = 1024;                               % Frame size in bits
+frames = 1000;                                  % Number of frames
+frameSize = 4096;                               % Frame size in bits
 symbolRate = 1e6;                               % Symbol rate
 numSamplesPerSymbol = 8;                        % Oversampling factor
 
@@ -107,13 +105,41 @@ fontSize = 12;
 plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% RNA
 %% Train
-dataFile = name; % Specify the calculated features file name to train
-SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
-% 'ALL' is default for training
-hiddenLayer = [20 20 20]; % Config the setup of hidden layers
-isPlot = 1; % Do you want to plot? It's confusion matrix
-%frames = 1000;
-[net, performance, tr] = forgeNetwork(dataFile,snrVector,SNRstring,isPlot,frames,hiddenLayer);
+hiddenLayers = {...
+    [20 16], ...
+    [18 14], ...
+    [16 12], ...
+    [14 10], ...
+    [12 8], ...
+    [10 6], ...
+    [20 16], ...
+    [18 14], ...
+    [16 12], ...
+    [14 10], ...
+    [12 8], ...
+    [10 6]};
+for n = 1:length(hiddenLayers)
+    dataFile = name; % Specify the calculated features file name to train
+    SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
+    % 'ALL' is default for training
+    hiddenLayer = hiddenLayers{n}; % Config the setup of hidden layers
+    isPlot = 0; % Do you want to plot? It's confusion matrix
+    %frames = 1000;
+    [net, performance, tr] = forgeNetwork(dataFile,snrVector,SNRstring,isPlot,frames,hiddenLayer);
+    close all
+end
 %% Evaluate
-SNRstring = 'ALL'; % Can be set to '-15','-10','-5','0','5','10' and '15'
-useNetwork(net,frames,SNRstring,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise) % Do the work
+SNRstring = {'-15','-10','-5','0','5','10','15','ALL'}; % Can be set to '-15','-10','-5','0','5','10' and '15'
+result = zeros(length(SNRstring),8);
+for n = 1:length(SNRstring)
+    result(n,:) = useNetwork(net,frames,SNRstring(n),signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise); % Do the work
+end
+% Building table
+frames_cell = num2cell(frames*ones(1,length(SNRstring))');
+frameSize_cell = num2cell(frameSize*ones(1,length(SNRstring))');
+result_cell = num2cell(result);
+final_cell = cat(2,SNRstring',frames_cell,frameSize_cell,result_cell);
+
+T = cell2table(final_cell,...
+    'VariableNames',{'SNR' 'frames' 'frameSize' 'BPSK' 'QPSK' 'QAM16' 'FSK2' 'FSK4' 'WGN' 'Overall' 'Performance'});
+writetable(T,'compilation.xlsx')

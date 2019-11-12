@@ -20,7 +20,7 @@ for i = 1:length(snrVector)
             inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
         end
 
-        instValuesStruct = instantaneousValues(inputModulationSignal,symbolRate*numSamplesPerSymbol);
+        instValuesStruct = instantaneousValues(inputModulationSignal);
         
         x = 1;
         
@@ -71,9 +71,9 @@ for i = 1:length(snrVector)
         end
         if(find(featuresVector == 10))
             %SNR linear
-            %result(i,x,j) = 10^(snrVector(i)/10);
+            result(i,x,j) = 10^(snrVector(i)/10);
             % Skewness
-            result(i,x,j) = Skew(instValuesStruct.instAbs);
+            %result(i,x,j) = Skew(instValuesStruct.instAbs);
         end
     end
 end

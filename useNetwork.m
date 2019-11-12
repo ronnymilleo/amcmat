@@ -1,4 +1,4 @@
-function [] = useNetwork(net,frames,SNR,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
+function [result] = useNetwork(net,frames,SNR,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% Use existing network
 % Allocation
 input = [];
@@ -81,9 +81,36 @@ output = amcFcn(input);
 performance = perform(net,target,output);
 str = strcat('Network performance: ',num2str(performance));
 disp(str)
-figure;plotconfusion(target,output);
-ax=gca;
-ticks = {'BPSK','QPSK','QAM16','FSK2','FSK4','WGN',''};
-set(ax,'XTickLabel',ticks);
-set(ax,'YTickLabel',ticks);
+[~,cm] = confusion(target,output);
+
+if(strcmp(SNR,'ALL'))
+    overall = 0;
+    for i = 1:length(cm(:,1))
+        for j = 1:length(cm(1,:))
+            if( i == j )
+                overall = overall + cm(i,j);
+                result(i) = cm(i,j)/7000;
+            end
+        end
+    end
+    result(7) = overall/(6*7000);
+else
+    overall = 0;
+    for i = 1:length(cm(:,1))
+        for j = 1:length(cm(1,:))
+            if( i == j )
+                overall = overall + cm(i,j);
+                result(i) = cm(i,j)/1000;
+            end
+        end
+    end
+    result(7) = overall/(6*1000);
+end
+result(8) = performance;
+
+% figure;plotconfusion(target,output);
+% ax=gca;
+% ticks = {'BPSK','QPSK','QAM16','FSK2','FSK4','WGN',''};
+% set(ax,'XTickLabel',ticks);
+% set(ax,'YTickLabel',ticks);
 end

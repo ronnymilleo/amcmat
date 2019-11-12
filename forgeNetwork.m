@@ -64,7 +64,7 @@ config1 = strrep(config0,'  ','-');
 config2 = strrep(config1,' ','-');
 performance_str = strrep(num2str(performance),'0.','p');
 name = strcat('.\Nets\',performance_str,'-',file(8:end),'-','net','-',config2);
-save(name,'net','performance','tr')
+save(name,'net','performance','tr','hiddenLayer')
 %% Generate a function for evaluating the RNA with random data
 genFunction(net, 'amcFcn', 'MatrixOnly', 'yes');
 %%
