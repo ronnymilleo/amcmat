@@ -89,22 +89,22 @@ if(strcmp(SNR,'ALL'))
         for j = 1:length(cm(1,:))
             if( i == j )
                 overall = overall + cm(i,j);
-                result(i) = cm(i,j)/7000;
+                result(i) = cm(i,j)/(7*frames);
             end
         end
     end
-    result(7) = overall/(6*7000);
+    result(7) = overall/(6*7*frames);
 else
     overall = 0;
     for i = 1:length(cm(:,1))
         for j = 1:length(cm(1,:))
             if( i == j )
                 overall = overall + cm(i,j);
-                result(i) = cm(i,j)/1000;
+                result(i) = cm(i,j)/frames;
             end
         end
     end
-    result(7) = overall/(6*1000);
+    result(7) = overall/(6*frames);
 end
 result(8) = performance;
 

@@ -7,11 +7,11 @@ clear
 clc
 %% Initial values
 % Main vectors
-snrVector = -15:5:15;                           % SNR vector
+snrVector = -15:1:15;                           % SNR vector
 featuresVector = [1 2 3 4 5 6 7 8 9 10];        % Features selection vector
 
 % Main config
-frames = 1000;                                  % Number of frames
+frames = 10000;                                  % Number of frames
 frameSize = 4096;                               % Frame size in bits
 symbolRate = 1e6;                               % Symbol rate
 numSamplesPerSymbol = 8;                        % Oversampling factor
@@ -92,17 +92,17 @@ disp(strcat('Finished.'))
 % 9 - Desvio padrao da amplitude instantanea normalizada e centralizada
 
 % 10 - Assimetria (Skewness)
-%%
-close all
-plotVector = [1 2 3 4];
-fontSize = 12;
-nLines = 20;
-plotFeatures(plotVector,nLines,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
-%% Plot das medias
-close all
-plotVector = [1 2 3 4];
-fontSize = 12;
-plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
+%% Plot
+% close all
+% plotVector = [1 2 3 4];
+% fontSize = 12;
+% nLines = 20;
+% plotFeatures(plotVector,nLines,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
+% %% Plot das medias
+% close all
+% plotVector = [1 2 3 4];
+% fontSize = 12;
+% plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% RNA
 %% Train
 hiddenLayers = {...
@@ -112,12 +112,13 @@ hiddenLayers = {...
     [14 10], ...
     [12 8], ...
     [10 6], ...
-    [20 16], ...
-    [18 14], ...
-    [16 12], ...
-    [14 10], ...
-    [12 8], ...
-    [10 6]};
+    [20 18 16], ...
+    [18 16 14], ...
+    [16 14 12], ...
+    [14 12 10], ...
+    [12 10 8], ...
+    [10 8 6]};
+%hiddenLayers = {[10 6]};
 for n = 1:length(hiddenLayers)
     dataFile = name; % Specify the calculated features file name to train
     SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
@@ -129,6 +130,9 @@ for n = 1:length(hiddenLayers)
     close all
 end
 %% Evaluate
+% Create a empty table to save results
+T = table;
+%% 
 SNRstring = {'-15','-10','-5','0','5','10','15','ALL'}; % Can be set to '-15','-10','-5','0','5','10' and '15'
 result = zeros(length(SNRstring),8);
 for n = 1:length(SNRstring)
@@ -140,6 +144,9 @@ frameSize_cell = num2cell(frameSize*ones(1,length(SNRstring))');
 result_cell = num2cell(result);
 final_cell = cat(2,SNRstring',frames_cell,frameSize_cell,result_cell);
 
-T = cell2table(final_cell,...
+T0 = cell2table(final_cell,...
     'VariableNames',{'SNR' 'frames' 'frameSize' 'BPSK' 'QPSK' 'QAM16' 'FSK2' 'FSK4' 'WGN' 'Overall' 'Performance'});
-writetable(T,'compilation.xlsx')
+
+T = cat(1,T,T0);
+%%
+writetable(T,'compilation3.xlsx')

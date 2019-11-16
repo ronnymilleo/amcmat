@@ -1,18 +1,18 @@
 function plotMeanFeatures(plotVector,fontSize,SNR,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% Means calculation
-meansQAM4 = meanFeatures(SNR,signal_bpsk);
-meansQAM16 = meanFeatures(SNR,signal_qpsk);
-meansPSK2 = meanFeatures(SNR,signal_qam16);
-meansFSK2 = meanFeatures(SNR,signal_fsk2);
-meansFSK4 = meanFeatures(SNR,signal_fsk4);
-meansWGN = meanFeatures(SNR,signal_noise);
+meansQAM4 = meanFeatures(signal_bpsk);
+meansQAM16 = meanFeatures(signal_qpsk);
+meansPSK2 = meanFeatures(signal_qam16);
+meansFSK2 = meanFeatures(signal_fsk2);
+meansFSK4 = meanFeatures(signal_fsk4);
+meansWGN = meanFeatures(signal_noise);
 %% Standard deviation calculation
-stdQAM4 = sigmaFeatures(SNR,signal_bpsk);
-stdQAM16 = sigmaFeatures(SNR,signal_qpsk);
-stdPSK2 = sigmaFeatures(SNR,signal_qam16);
-stdFSK2 = sigmaFeatures(SNR,signal_fsk2);
-stdFSK4 = sigmaFeatures(SNR,signal_fsk4);
-stdWGN = sigmaFeatures(SNR,signal_noise);
+stdQAM4 = sigmaFeatures(signal_bpsk);
+stdQAM16 = sigmaFeatures(signal_qpsk);
+stdPSK2 = sigmaFeatures(signal_qam16);
+stdFSK2 = sigmaFeatures(signal_fsk2);
+stdFSK4 = sigmaFeatures(signal_fsk4);
+stdWGN = sigmaFeatures(signal_noise);
 %% Color definition
 BPSKColor = [0, 0.4470, 0.7410];
 QPSKColor = [0.9290, 0.6940, 0.1250];
