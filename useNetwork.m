@@ -1,4 +1,4 @@
-function [result] = useNetwork(net,frames,SNR,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
+function [result] = useNetwork(net,frames,snrVector,n,SNR,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% Use existing network
 % Allocation
 input = [];
@@ -18,49 +18,55 @@ for a = 1:6
         case 6
             signal = signal_noise;
     end
-%     if (strcmp(SNR,'-20') || strcmp(SNR,'ALL'))
+    if (strcmp(SNR,'ALL'))
+        for b = 1:length(snrVector)
+            for i = 1:frames
+                input = cat(2,input,signal(b,:,i)'); % SNR = -15
+            end
+        end
+    else
+        for i = 1:frames
+            input = cat(2,input,signal(n,:,i)'); % SNR = -15
+        end
+    end
+%     if (strcmp(SNR,'-15'))
 %         for i = 1:frames
-%             input = cat(2,input,signal(1,:,i)'); % SNR = -20
+%             input = cat(2,input,signal(1,:,i)'); % SNR = -15
 %         end
 %     end
-    if (strcmp(SNR,'-15') || strcmp(SNR,'ALL'))
-        for i = 1:frames
-            input = cat(2,input,signal(1,:,i)'); % SNR = -15
-        end
-    end
-    if (strcmp(SNR,'-10') || strcmp(SNR,'ALL'))
-        for i = 1:frames
-            input = cat(2,input,signal(2,:,i)'); % SNR = -10
-        end
-    end
-    if (strcmp(SNR,'-5') || strcmp(SNR,'ALL'))
-        for i = 1:frames
-            input = cat(2,input,signal(3,:,i)'); % SNR = -5
-        end
-    end
-    if (strcmp(SNR,'0') || strcmp(SNR,'ALL'))
-        for i = 1:frames
-            input = cat(2,input,signal(4,:,i)'); % SNR = 0
-        end
-    end
-    if (strcmp(SNR,'5') || strcmp(SNR,'ALL'))
-        for i = 1:frames
-            input = cat(2,input,signal(5,:,i)'); % SNR = 5
-        end
-    end
-    if (strcmp(SNR,'10') || strcmp(SNR,'ALL'))
-        for i = 1:frames
-            input = cat(2,input,signal(6,:,i)'); % SNR = 10
-        end
-    end
-    if (strcmp(SNR,'15') || strcmp(SNR,'ALL'))
-        for i = 1:frames
-            input = cat(2,input,signal(7,:,i)'); % SNR = 15
-        end
-    end
+%     if (strcmp(SNR,'-10'))
+%         for i = 1:frames
+%             input = cat(2,input,signal(2,:,i)'); % SNR = -10
+%         end
+%     end
+%     if (strcmp(SNR,'-5'))
+%         for i = 1:frames
+%             input = cat(2,input,signal(3,:,i)'); % SNR = -5
+%         end
+%     end
+%     if (strcmp(SNR,'0'))
+%         for i = 1:frames
+%             input = cat(2,input,signal(4,:,i)'); % SNR = 0
+%         end
+%     end
+%     if (strcmp(SNR,'5'))
+%         for i = 1:frames
+%             input = cat(2,input,signal(5,:,i)'); % SNR = 5
+%         end
+%     end
+%     if (strcmp(SNR,'10'))
+%         for i = 1:frames
+%             input = cat(2,input,signal(6,:,i)'); % SNR = 10
+%         end
+%     end
+%     if (strcmp(SNR,'15'))
+%         for i = 1:frames
+%             input = cat(2,input,signal(7,:,i)'); % SNR = 15
+%         end
+%     end
 end
 if(strcmp(SNR,'ALL'))
-    [m,n] = size(signal_bpsk(:,:,1)');
+    [~,n] = size(signal_bpsk(:,:,1)');
     target = [ones(1, frames*n) zeros(1, 5*frames*n)
           zeros(1, frames*n) ones(1,frames*n) zeros(1, 4*frames*n)
           zeros(1, 2*frames*n) ones(1,frames*n) zeros(1,3*frames*n)
@@ -68,7 +74,7 @@ if(strcmp(SNR,'ALL'))
           zeros(1, 4*frames*n) ones(1,frames*n) zeros(1,frames*n)
           zeros(1, 5*frames*n) ones(1,frames*n)];
 else
-    [m,n] = size(signal_bpsk(1,:,1)');
+    [~,n] = size(signal_bpsk(1,:,1)');
     target = [ones(1, frames*n) zeros(1, 5*frames*n)
           zeros(1, frames*n) ones(1,frames*n) zeros(1, 4*frames*n)
           zeros(1, 2*frames*n) ones(1,frames*n) zeros(1,3*frames*n)
@@ -82,18 +88,17 @@ performance = perform(net,target,output);
 str = strcat('Network performance: ',num2str(performance));
 disp(str)
 [~,cm] = confusion(target,output);
-
 if(strcmp(SNR,'ALL'))
     overall = 0;
     for i = 1:length(cm(:,1))
         for j = 1:length(cm(1,:))
             if( i == j )
                 overall = overall + cm(i,j);
-                result(i) = cm(i,j)/(7*frames);
+                result(i) = cm(i,j)/(length(snrVector)*frames);
             end
         end
     end
-    result(7) = overall/(6*7*frames);
+    result(7) = overall/(6*length(snrVector)*frames);
 else
     overall = 0;
     for i = 1:length(cm(:,1))

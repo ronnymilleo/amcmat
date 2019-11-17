@@ -23,13 +23,13 @@ modParameters = struct(...
     'CN', 1, ... % Activate channel noise + rayleigh
     'isPlot', 0);% Activate modulation plot (scatterplot + spectrum)
 
-% Rayleigh channel settings
-rayleighSettings = struct(...
-    'activate',0,...
-    'Fs',numSamplesPerSymbol*symbolRate, ...    % Sampling frequency
-    'pathDelays',(0:5:15)*1e-9, ...             % Path delay in seconds
-    'avgPathGains',[0 -3 -6 -9], ...            % Average path gains in dB
-    'maxDopplerShift',numSamplesPerSymbol*symbolRate/20);               
+% Rayleigh channel settings (not used)
+% rayleighSettings = struct(...
+%     'activate',0,...
+%     'Fs',numSamplesPerSymbol*symbolRate, ...    % Sampling frequency
+%     'pathDelays',(0:5:15)*1e-9, ...             % Path delay in seconds
+%     'avgPathGains',[0 -3 -6 -9], ...            % Average path gains in dB
+%     'maxDopplerShift',numSamplesPerSymbol*symbolRate/20);               
 %% Generate and extract characteristics from signals 
 disp('Starting. Please wait...');
 tic
@@ -90,8 +90,8 @@ disp(strcat('Finished.'))
 % 7 - Media da amplitude instantanea normalizada centralizada ao quadrado
 % 8 - Desvio padrao do valor absoluto da amplitude instantanea normalizada e centralizada
 % 9 - Desvio padrao da amplitude instantanea normalizada e centralizada
-
-% 10 - Assimetria (Skewness)
+%
+% 10 - SNR
 %% Plot
 % close all
 % plotVector = [1 2 3 4];
@@ -118,25 +118,26 @@ hiddenLayers = {...
     [14 12 10], ...
     [12 10 8], ...
     [10 8 6]};
-%hiddenLayers = {[10 6]};
 for n = 1:length(hiddenLayers)
     dataFile = name; % Specify the calculated features file name to train
     SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'
     % 'ALL' is default for training
     hiddenLayer = hiddenLayers{n}; % Config the setup of hidden layers
-    isPlot = 0; % Do you want to plot? It's confusion matrix
-    %frames = 1000;
+    isPlot = 0; % Confusion matrix
     [net, performance, tr] = forgeNetwork(dataFile,snrVector,SNRstring,isPlot,frames,hiddenLayer);
     close all
 end
-%% Evaluate
-% Create a empty table to save results
+%% Create a empty table to save results
 T = table;
-%% 
-SNRstring = {'-15','-10','-5','0','5','10','15','ALL'}; % Can be set to '-15','-10','-5','0','5','10' and '15'
+%% Evaluate
+SNRstring = {};
+for a = 1:length(snrVector)
+    SNRstring = cat(2,SNRstring,num2str(snrVector(a)));
+end
+SNRstring = cat(2,SNRstring,'ALL');
 result = zeros(length(SNRstring),8);
 for n = 1:length(SNRstring)
-    result(n,:) = useNetwork(net,frames,SNRstring(n),signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise); % Do the work
+    result(n,:) = useNetwork(net,frames,snrVector,n,SNRstring(n),signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise); % Do the work
 end
 % Building table
 frames_cell = num2cell(frames*ones(1,length(SNRstring))');
@@ -148,5 +149,5 @@ T0 = cell2table(final_cell,...
     'VariableNames',{'SNR' 'frames' 'frameSize' 'BPSK' 'QPSK' 'QAM16' 'FSK2' 'FSK4' 'WGN' 'Overall' 'Performance'});
 
 T = cat(1,T,T0);
-%%
-writetable(T,'compilation3.xlsx')
+%% Save to file
+writetable(T,'data.xlsx')

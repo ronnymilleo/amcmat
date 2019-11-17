@@ -31,14 +31,14 @@ for a = 1:6
     if (strcmp(snrString,'ALL'))
         for b = 1:length(snrVector) 
             for i = 1:frames
-                input = cat(2,input,signal(b,:,i)'); % SNR = -15
+                input = cat(2,input,signal(b,:,i)');
             end
         end
     else
         disp('Under construction...');
     end 
 end
-[m,n] = size(signal_bpsk(:,:,1)');
+[~,n] = size(signal_bpsk(:,:,1)');
 target = [ones(1, frames*n) zeros(1, 5*frames*n)
       zeros(1, frames*n) ones(1,frames*n) zeros(1, 4*frames*n)
       zeros(1, 2*frames*n) ones(1,frames*n) zeros(1,3*frames*n)
