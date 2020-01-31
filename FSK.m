@@ -1,4 +1,4 @@
-function [dataOut] = FSK(M,frameSize,symbolRate,numSamplesPerSymbol,SNR,modParameters,rayleighSettings)
+function [dataOut] = FSK(M,frameSize,symbolRate,numSamplesPerSymbol,SNR,modParameters)
 %% Signal generation
 % Frequency Separation
 FREQSEP = numSamplesPerSymbol*symbolRate/M;
@@ -16,7 +16,7 @@ modulator = comm.FSKModulator(M,FREQSEP,symbolRate,...
 fskSignal = modulator(dataIn);
 
 if(modParameters.CN)
-    rxSignal = applyChannel(fskSignal,SNR,rayleighSettings);
+    rxSignal = applyChannel(fskSignal,SNR);
 else
     rxSignal = fskSignal;
 end

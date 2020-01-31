@@ -1,4 +1,4 @@
-function [dataOut] = QAM(M,frameSize,symbolRate,numSamplesPerSymbol,SNR,modParameters,rayleighSettings)
+function [dataOut] = QAM(M,frameSize,symbolRate,numSamplesPerSymbol,SNR,modParameters)
 %% Signal generation
 % % Filter creation
 span = 10;
@@ -21,7 +21,7 @@ end
 txSignal = upfirdn(qamSignal,rrcFilter,numSamplesPerSymbol,1);
 
 if(modParameters.CN)
-    rxSignal = applyChannel(txSignal,SNR,rayleighSettings);
+    rxSignal = applyChannel(txSignal,SNR);
 else
     rxSignal = txSignal;
 end

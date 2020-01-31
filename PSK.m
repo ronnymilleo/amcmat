@@ -1,4 +1,4 @@
-function [dataOut] = PSK(M,frameSize,symbolRate,numSamplesPerSymbol,SNR,modParameters,rayleighSettings)
+function [dataOut] = PSK(M,frameSize,symbolRate,numSamplesPerSymbol,SNR,modParameters)
 %% Signal generation
 % % Filter creation
 span = 10;
@@ -13,17 +13,17 @@ phaseOffset = pi*(2*rand(1)-1);
 % Modulate signal
 if(modParameters.RP) % Variable initial phase
     modulator = comm.PSKModulator(M,phaseOffset,'OutputDataType','double');
-    bpskSignal = modulator(dataIn);                   
+    pskSignal = modulator(dataIn);                   
 else
     modulator = comm.PSKModulator(M,'OutputDataType','double');
-    bpskSignal = modulator(dataIn);
+    pskSignal = modulator(dataIn);
 end
 
 % Transmission filter
-txSignal = upfirdn(bpskSignal,rrcFilter,numSamplesPerSymbol,1);
+txSignal = upfirdn(pskSignal,rrcFilter,numSamplesPerSymbol,1);
 
 if(modParameters.CN)
-    rxSignal = applyChannel(txSignal,SNR,rayleighSettings);
+    rxSignal = applyChannel(txSignal,SNR);
 else
     rxSignal = txSignal;
 end
@@ -42,7 +42,7 @@ rxSignal = rxSignal(span*numSamplesPerSymbol/2+1:end-span*numSamplesPerSymbol/2-
 if(modParameters.isPlot)
     sPlotFig = scatterplot(rxSignal,1,0,'g.');
     hold on
-    scatterplot(bpskSignal,1,0,'k*',sPlotFig)
+    scatterplot(pskSignal,1,0,'k*',sPlotFig)
     dspView = dsp.SpectrumAnalyzer('SampleRate',symbolRate*numSamplesPerSymbol);
     dspView(rxSignal);
 end

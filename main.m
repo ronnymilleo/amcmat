@@ -3,33 +3,25 @@
 % Programa de Pos-Graduacao em Engenharia Eletrica
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Clear memory
-clear 
+clear
 clc
 %% Initial values
 % Main vectors
-snrVector = -15:1:15;                           % SNR vector
+snrVector = -15:5:15;                           % SNR vector
 featuresVector = [1 2 3 4 5 6 7 8 9 10];        % Features selection vector
 
 % Main config
-frames = 10000;                                  % Number of frames
-frameSize = 4096;                               % Frame size in bits
-symbolRate = 1e6;                               % Symbol rate
-numSamplesPerSymbol = 8;                        % Oversampling factor
+frames = 4096;                                  % Number of frames
+frameSize = 1024;                               % Frame size in bits
+symbolRate = 1000;                               % Symbol rate
+numSamplesPerSymbol = 2;                        % Oversampling factor
 
 % Modulation parameters
 modParameters = struct(...
     'RP', 1, ... % Activade variable initial phase / Random phase
     'RA', 1, ... % Activade variable initial amplitude / Random amplitude
     'CN', 1, ... % Activate channel noise + rayleigh
-    'isPlot', 0);% Activate modulation plot (scatterplot + spectrum)
-
-% Rayleigh channel settings (not used)
-% rayleighSettings = struct(...
-%     'activate',0,...
-%     'Fs',numSamplesPerSymbol*symbolRate, ...    % Sampling frequency
-%     'pathDelays',(0:5:15)*1e-9, ...             % Path delay in seconds
-%     'avgPathGains',[0 -3 -6 -9], ...            % Average path gains in dB
-%     'maxDopplerShift',numSamplesPerSymbol*symbolRate/20);               
+    'isPlot', 0);% Activate modulation plot (scatterplot + spectrum)            
 %% Generate and extract characteristics from signals 
 disp('Starting. Please wait...');
 tic
@@ -93,31 +85,32 @@ disp(strcat('Finished.'))
 %
 % 10 - SNR
 %% Plot
-% close all
-% plotVector = [1 2 3 4];
-% fontSize = 12;
-% nLines = 20;
-% plotFeatures(plotVector,nLines,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
-% %% Plot das medias
-% close all
-% plotVector = [1 2 3 4];
-% fontSize = 12;
-% plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
+close all
+plotVector = [1 2 3 4];
+fontSize = 12;
+nLines = 20;
+plotFeatures(plotVector,nLines,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
+%% Plot das medias
+close all
+plotVector = [1 2];
+fontSize = 12;
+plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
 %% RNA
 %% Train
-hiddenLayers = {...
-    [20 16], ...
-    [18 14], ...
-    [16 12], ...
-    [14 10], ...
-    [12 8], ...
-    [10 6], ...
-    [20 18 16], ...
-    [18 16 14], ...
-    [16 14 12], ...
-    [14 12 10], ...
-    [12 10 8], ...
-    [10 8 6]};
+% hiddenLayers = {...
+%     [20 16], ...
+%     [18 14], ...
+%     [16 12], ...
+%     [14 10], ...
+%     [12 8], ...
+%     [10 6], ...
+%     [20 18 16], ...
+%     [18 16 14], ...
+%     [16 14 12], ...
+%     [14 12 10], ...
+%     [12 10 8], ...
+%     [10 8 6]};
+hiddenLayers = {[20 18 16]};
 for n = 1:length(hiddenLayers)
     dataFile = name; % Specify the calculated features file name to train
     SNRstring = 'ALL'; % Can be set to '-20','-15','-10','-5','0','5','10' and '15'

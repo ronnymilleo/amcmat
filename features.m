@@ -1,4 +1,4 @@
-function [result] = features(modulation,snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings)
+function [result] = features(modulation,snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters)
 %% Features
 % Matrix allocation
 result = zeros(length(snrVector),length(featuresVector),length(frames));
@@ -7,15 +7,15 @@ for i = 1:length(snrVector)
     fprintf('Computing features for SNR = %d dB\n',snrVector(i))
     for j = 1:frames
         if(strcmp(modulation,'QPSK'))
-            inputModulationSignal = PSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
+            inputModulationSignal = PSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
         elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM(16,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
+            inputModulationSignal = QAM(16,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
         elseif(strcmp(modulation,'BPSK'))
-            inputModulationSignal = PSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
+            inputModulationSignal = PSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
         elseif(strcmp(modulation,'FSK2'))
-            inputModulationSignal = FSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
+            inputModulationSignal = FSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
         elseif(strcmp(modulation,'FSK4'))
-            inputModulationSignal = FSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters,rayleighSettings);
+            inputModulationSignal = FSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
         else
             inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
         end

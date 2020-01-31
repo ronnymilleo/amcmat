@@ -22,13 +22,13 @@ FSK4Color = [0.4660, 0.6740, 0.1880];
 %% Ft. 1
 if(find(plotVector == 1))
     figure(1)
-    errorbar(SNR,meansQAM4(:,1,1),3*stdQAM4(:,1,1),'o-','Color',BPSKColor)
+    errorbar(SNR,meansQAM4(:,1,1),3*stdQAM4(:,1,1),'o-','Color',BPSKColor,'LineWidth',1.25)
     hold on
-    errorbar(SNR,meansQAM16(:,1,1),3*stdQAM16(:,1,1),'x-','Color',QPSKColor)
-    errorbar(SNR,meansPSK2(:,1,1),3*stdPSK2(:,1,1),'+-','Color',QAM16Color)
-    errorbar(SNR,meansFSK2(:,1,1),3*stdFSK2(:,1,1),'*-','Color',FSK2Color)
-    errorbar(SNR,meansFSK4(:,1,1),3*stdFSK4(:,1,1),'^-','Color',FSK4Color)
-    errorbar(SNR,meansWGN(:,1,1),3*stdWGN(:,1,1),'d-k')
+    errorbar(SNR,meansQAM16(:,1,1),3*stdQAM16(:,1,1),'x-','Color',QPSKColor,'LineWidth',1.25)
+    errorbar(SNR,meansPSK2(:,1,1),3*stdPSK2(:,1,1),'+-','Color',QAM16Color,'LineWidth',1.25)
+    errorbar(SNR,meansFSK2(:,1,1),3*stdFSK2(:,1,1),'*-','Color',FSK2Color,'LineWidth',1.25)
+    errorbar(SNR,meansFSK4(:,1,1),3*stdFSK4(:,1,1),'^-','Color',FSK4Color,'LineWidth',1.25)
+    errorbar(SNR,meansWGN(:,1,1),3*stdWGN(:,1,1),'d-k','LineWidth',1.25)
     hold off
     title('Desvio padrao do valor absoluto da fase')
     x = xlabel('SNR');
