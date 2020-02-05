@@ -1,4 +1,4 @@
-function [result] = features(modulation,snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters)
+function [result] = features(dataset,signals,modulation,snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters)
 %% Features
 % Matrix allocation
 result = zeros(length(snrVector),length(featuresVector),length(frames));
@@ -6,20 +6,36 @@ result = zeros(length(snrVector),length(featuresVector),length(frames));
 for i = 1:length(snrVector)
     fprintf('Computing features for SNR = %d dB\n',snrVector(i))
     for j = 1:frames
-        if(strcmp(modulation,'QPSK'))
-            inputModulationSignal = PSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
-        elseif(strcmp(modulation,'QAM16'))
-            inputModulationSignal = QAM(16,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
-        elseif(strcmp(modulation,'BPSK'))
-            inputModulationSignal = PSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
-        elseif(strcmp(modulation,'FSK2'))
-            inputModulationSignal = FSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
-        elseif(strcmp(modulation,'FSK4'))
-            inputModulationSignal = FSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
+        if(~dataset)
+            if(strcmp(modulation,'BPSK'))
+                inputModulationSignal = PSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
+            elseif(strcmp(modulation,'QPSK'))
+                inputModulationSignal = PSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
+            elseif(strcmp(modulation,'QAM16'))
+                inputModulationSignal = QAM(16,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
+            elseif(strcmp(modulation,'FSK2'))
+                inputModulationSignal = FSK(2,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
+            elseif(strcmp(modulation,'FSK4'))
+                inputModulationSignal = FSK(4,frameSize,symbolRate,numSamplesPerSymbol,snrVector(i),modParameters);
+            else
+                inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
+            end
         else
-            inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
+            if(strcmp(modulation,'BPSK'))
+                inputModulationSignal = signals.bpsk(i,j,:);
+            elseif(strcmp(modulation,'QPSK'))
+                inputModulationSignal = signals.qpsk(i,j,:);
+            elseif(strcmp(modulation,'QAM16'))
+                inputModulationSignal = signals.qam16(i,j,:);
+            elseif(strcmp(modulation,'FSK2'))
+                inputModulationSignal = signals.fsk2(i,j,:);
+            elseif(strcmp(modulation,'FSK4'))
+                inputModulationSignal = signals.fsk4(i,j,:);
+            else
+                inputModulationSignal = gaussianNoise(frameSize,0); % Noise power = 0 dB
+            end
         end
-
+        
         instValuesStruct = instantaneousValues(inputModulationSignal);
         
         x = 1;

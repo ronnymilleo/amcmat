@@ -7,42 +7,46 @@ clear
 clc
 %% Initial values
 % Main vectors
-snrVector = -15:5:15;                           % SNR vector
+snrVector = -20:2:30;                           % SNR vector
 featuresVector = [1 2 3 4 5 6 7 8 9 10];        % Features selection vector
 
 % Main config
-frames = 4096;                                  % Number of frames
+frames = 256;                                   % Number of frames
 frameSize = 1024;                               % Frame size in bits
-symbolRate = 1000;                               % Symbol rate
-numSamplesPerSymbol = 2;                        % Oversampling factor
+symbolRate = 1000;                              % Symbol rate
+numSamplesPerSymbol = 1;                        % Oversampling factor
 
 % Modulation parameters
 modParameters = struct(...
     'RP', 1, ... % Activade variable initial phase / Random phase
-    'RA', 1, ... % Activade variable initial amplitude / Random amplitude
-    'CN', 1, ... % Activate channel noise + rayleigh
+    'RA', 0, ... % Activade variable initial amplitude / Random amplitude
+    'CN', 1, ... % Activate channel noise
     'isPlot', 0);% Activate modulation plot (scatterplot + spectrum)            
+%% Generate dataset
+[signal_bpsk, signal_qpsk, signal_8psk] = generatePSKDataset(snrVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
+[signal_qam16, signal_qam64, signal_qam256] = generateQAMDataset(snrVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
+signals = struct('bpsk',signal_bpsk,'qpsk',signal_qpsk,'psk8',signal_8psk,'qam16',signal_qam16,'qam64',signal_qam64,'qam256',signal_qam256);
 %% Generate and extract characteristics from signals 
 disp('Starting. Please wait...');
 tic
 nFeatures = length(featuresVector);
 fprintf('Extracting %d BPSK features...\n',nFeatures)
-signal_bpsk = features('BPSK',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
+features_bpsk = features(1,signals,'BPSK',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
 disp('BPSK features extracted (1/6)')
 fprintf('Extracting %d QPSK features...\n',nFeatures)
-signal_qpsk = features('QPSK',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
+features_qpsk = features(1,signals,'QPSK',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
 disp(strcat('QAM4 features extracted (2/6)'))
 fprintf('Extracting %d QAM16 features...\n',nFeatures)
-signal_qam16 = features('QAM16',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
+features_qam16 = features(1,signals,'QAM16',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
 disp(strcat('QAM16 features extracted (3/6)'))
-fprintf('Extracting %d FSK2 features...\n',nFeatures)
-signal_fsk2 = features('FSK2',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
-disp(strcat('FSK2 features extracted (4/6)'))
-fprintf('Extracting %d FSK4 features...\n',nFeatures)
-signal_fsk4 = features('FSK4',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
-disp(strcat('FSK4 features extracted (5/6)'))
+% fprintf('Extracting %d FSK2 features...\n',nFeatures)
+% features_fsk2 = features(1,signals,'FSK2',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
+% disp(strcat('FSK2 features extracted (4/6)'))
+% fprintf('Extracting %d FSK4 features...\n',nFeatures)
+% features_fsk4 = features(1,signals,'FSK4',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
+% disp(strcat('FSK4 features extracted (5/6)'))
 fprintf('Extracting %d WGN features...\n',nFeatures)
-signal_noise = features('noise',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters,rayleighSettings);
+features_noise = features(1,signals,'noise',snrVector,featuresVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
 disp(strcat('WGN features extracted (6/6)'))
 toc
 disp(strcat('Done. Saving...'))
@@ -53,20 +57,17 @@ str = strrep(DateString,' ','-');
 str = strrep(str,':','-');
 name = strcat('.\Data\ftData-',str);
 save(name, 'name', ...
-    'signal_bpsk', ...
-    'signal_qpsk', ...
-    'signal_qam16', ...
-    'signal_fsk2', ...
-    'signal_fsk4', ...
-    'signal_noise', ...
+    'features_bpsk', ...
+    'features_qpsk', ...
+    'features_qam16', ...
+    'features_noise', ...
     'frames', ...
     'frameSize',...
     'symbolRate',...
     'numSamplesPerSymbol', ...
     'snrVector', ...
     'featuresVector', ...
-    'modParameters', ...
-    'rayleighSettings');
+    'modParameters');
 disp(strcat('Finished.'))
 %% Plot
 % 1 - Desvio padrao do valor absoluto da componente nao-linear da fase instantanea
@@ -86,15 +87,15 @@ disp(strcat('Finished.'))
 % 10 - SNR
 %% Plot
 close all
-plotVector = [1 2 3 4];
+plotVector = [1 2 3 4 5 6 7 8 9];
 fontSize = 12;
 nLines = 20;
-plotFeatures(plotVector,nLines,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
+plotFeatures(plotVector,nLines,fontSize,snrVector,features_bpsk,features_qpsk,features_qam16)%,signal_fsk2,signal_fsk4,signal_noise)
 %% Plot das medias
 close all
-plotVector = [1 2];
+plotVector = [1 2 3 4 5 6 7 8 9];
 fontSize = 12;
-plotMeanFeatures(plotVector,fontSize,snrVector,signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise)
+plotMeanFeatures(plotVector,fontSize,snrVector,features_bpsk,features_qpsk,features_qam16)%,signal_fsk2,signal_fsk4,signal_noise)
 %% RNA
 %% Train
 % hiddenLayers = {...
@@ -130,7 +131,7 @@ end
 SNRstring = cat(2,SNRstring,'ALL');
 result = zeros(length(SNRstring),8);
 for n = 1:length(SNRstring)
-    result(n,:) = useNetwork(net,frames,snrVector,n,SNRstring(n),signal_bpsk,signal_qpsk,signal_qam16,signal_fsk2,signal_fsk4,signal_noise); % Do the work
+    result(n,:) = useNetwork(net,frames,snrVector,n,SNRstring(n),features_bpsk,features_qpsk,features_qam16,features_fsk2,features_fsk4,features_noise); % Do the work
 end
 % Building table
 frames_cell = num2cell(frames*ones(1,length(SNRstring))');
