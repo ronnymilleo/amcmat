@@ -5,16 +5,18 @@
 %% Clear memory
 clear
 clc
+s = RandStream('mt19937ar','Seed',1);
+rng('shuffle')
 %% Initial values
 % Main vectors
-snrVector = -20:2:30;                           % SNR vector
+snrVector = -10:2:20;                           % SNR vector
 featuresVector = [1 2 3 4 5 6 7 8 9 10];        % Features selection vector
 
 % Main config
-frames = 256;                                   % Number of frames
+frames = 1000;                                 % Number of frames
 frameSize = 1024;                               % Frame size in bits
-symbolRate = 1000;                              % Symbol rate
-numSamplesPerSymbol = 1;                        % Oversampling factor
+symbolRate = 100000;                            % Symbol rate
+numSamplesPerSymbol = 8;                        % Oversampling factor
 
 % Modulation parameters
 modParameters = struct(...
@@ -23,8 +25,23 @@ modParameters = struct(...
     'CN', 1, ... % Activate channel noise
     'isPlot', 0);% Activate modulation plot (scatterplot + spectrum)            
 %% Generate dataset
-[signal_bpsk, signal_qpsk, signal_8psk] = generatePSKDataset(snrVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
-[signal_qam16, signal_qam64, signal_qam256] = generateQAMDataset(snrVector,frames,frameSize,symbolRate,numSamplesPerSymbol,modParameters);
+[signal_bpsk, signal_qpsk, signal_8psk] = generatePSKDataset(snrVector,frames,frameSize,symbolRate,numSamplesPerSymbol,s,modParameters);
+[signal_qam16, signal_qam64] = generateQAMDataset(snrVector,frames,frameSize,symbolRate,numSamplesPerSymbol,s,modParameters);
+signal_noise = generateWGNDataset(snrVector,frames,frameSize);
+% Convert to single precision
+signal_bpsk = single(signal_bpsk);
+signal_qpsk = single(signal_qpsk);
+signal_8psk = single(signal_8psk);
+signal_qam16 = single(signal_qam16);
+signal_qam64 = single(signal_qam64);
+signal_noise = single(signal_noise);
+save('BPSK.mat','signal_bpsk')
+save('QPSK.mat','signal_qpsk')
+save('PSK8.mat','signal_8psk')
+save('QAM16.mat','signal_qam16')
+save('QAM64.mat','signal_qam64')
+save('noise.mat','signal_noise')
+%%
 signals = struct('bpsk',signal_bpsk,'qpsk',signal_qpsk,'psk8',signal_8psk,'qam16',signal_qam16,'qam64',signal_qam64,'qam256',signal_qam256);
 %% Generate and extract characteristics from signals 
 disp('Starting. Please wait...');
