@@ -1,22 +1,25 @@
-function [dataOut] = FSK(M,frameSize,symbolRate,numSamplesPerSymbol,SNR,modParameters)
+function [dataOut] = FSK(M,frameSize,symbolRate,numSamplesPerSymbol,SNR,modParameters,s)
 %% Signal generation
 % Frequency Separation
 FREQSEP = numSamplesPerSymbol*symbolRate/M;
 
 % Rule for no aliasing:
-% Fs = numSamplesPerSymbol*symbolRate > M * FREQSEP
+Fs = 2*numSamplesPerSymbol*symbolRate;% > M * FREQSEP
 
 % Create random message
 dataIn = randi([0 M-1],frameSize,1);                                             
 
-% Modulate signal
-modulator = comm.FSKModulator(M,FREQSEP,symbolRate,...
-    'SamplesPerSymbol',numSamplesPerSymbol,...
-    'OutputDataType','double');
-fskSignal = modulator(dataIn);
+% Modulate signal (fskmod)
+fskSignal = fskmod(dataIn, M, FREQSEP, frameSize, Fs);
+
+% % Modulate signal
+% modulator = comm.FSKModulator(M,FREQSEP,symbolRate,...
+%     'SamplesPerSymbol',numSamplesPerSymbol,...
+%     'OutputDataType','double');
+% fskSignal = modulator(dataIn);
 
 if(modParameters.CN)
-    rxSignal = applyChannel(fskSignal,SNR);
+    rxSignal = applyChannel(fskSignal,SNR,s);
 else
     rxSignal = fskSignal;
 end
