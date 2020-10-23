@@ -1,5 +1,5 @@
 function [psk2_signal, psk4_signal, psk8_signal] = generatePSKDataset(snrVector,frames,frameSize,symbolRate,numSamplesPerSymbol,s,modParameters)
-psk2_signal = zeros(length(snrVector),frames,frameSize*8);
+psk2_signal = zeros(length(snrVector),frames,frameSize*numSamplesPerSymbol);
 psk4_signal = psk2_signal;
 psk8_signal = psk2_signal;
 for i = 1:length(snrVector)
