@@ -15,13 +15,13 @@ snrVector = -10:2:20;                          % SNR array
 
 % Main config
 symbolRate = 100000;                           % Symbol rate
-numSamplesPerSymbol = 2;                       % Oversampling factor
-frames = 1000;                                 % Number of frames
+numSamplesPerSymbol = 8;                       % Oversampling factor
+frames = 500;                                 % Number of frames
 frameSize = 2048 / numSamplesPerSymbol;        % Frame size in bits
 
 % Modulation parameters
 modParameters = struct(...
-    'RP', 1, ... % Activade variable initial phase / Random phase
+    'RP', 0, ... % Activade variable initial phase / Random phase
     'RA', 0, ... % Activade variable initial amplitude / Random amplitude
     'CN', 1, ... % Activate channel noise
     'isPlot', 0);% Activate modulation plot (scatterplot + spectrum)            
@@ -36,9 +36,13 @@ signal_8psk = single(signal_8psk);
 signal_qam16 = single(signal_qam16);
 signal_qam64 = single(signal_qam64);
 signal_noise = single(signal_noise);
+%%
+save('all_modulations.mat')
+%%
 save('BPSK.mat','signal_bpsk')
 save('QPSK.mat','signal_qpsk')
 save('PSK8.mat','signal_8psk')
 save('QAM16.mat','signal_qam16')
 save('QAM64.mat','signal_qam64')
 save('noise.mat','signal_noise')
+%%
