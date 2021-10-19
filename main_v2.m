@@ -3,6 +3,7 @@
 % Programa de Pos-Graduacao em Engenharia Eletrica
 % Ronny Milléo
 % Adenilson Castro
+% Atualizado 19/10/2021
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear
 clc
@@ -11,20 +12,20 @@ clc
 snrArray = single(-10:2:20);
 
 % Main config
-symbolRate = 10000;
+symbolRate = 100000;
 numSamplesPerSymbol = 8;
 numFrames = 1000;
-initial_phase_offset = single(randn(1,numFrames));
+phase = single(randn(1,numFrames));
 frameSize = 2048 / numSamplesPerSymbol;
 M = [2 4 8 16 64];
 
 % Preallocation
 signal_bpsk = single(zeros(length(snrArray), numFrames, frameSize * numSamplesPerSymbol));
-signal_qpsk = signal_bpsk;
-signal_8psk = signal_qpsk;
-signal_qam16 = signal_8psk;
-signal_qam64 = signal_qam16;
-signal_noise = signal_qam64;
+signal_qpsk = single(zeros(length(snrArray), numFrames, frameSize * numSamplesPerSymbol));
+signal_8psk = single(zeros(length(snrArray), numFrames, frameSize * numSamplesPerSymbol));
+signal_qam16 = single(zeros(length(snrArray), numFrames, frameSize * numSamplesPerSymbol));
+signal_qam64 = single(zeros(length(snrArray), numFrames, frameSize * numSamplesPerSymbol));
+signal_noise = single(zeros(length(snrArray), numFrames, frameSize * numSamplesPerSymbol));
 %%
 for i = 1:5 % Modulation loop
     if M(i) == 2
@@ -85,18 +86,4 @@ for j = 1:length(snrArray) % SNR loop
     end
 end
 %%
-%signal_bpsk = squeeze(signal_bpsk);
-%signal_qpsk = squeeze(signal_qpsk);
-%signal_8psk = squeeze(signal_8psk);
-%signal_qam16 = squeeze(signal_qam16);
-%signal_qam64 = squeeze(signal_qam64);
-%signal_noise = squeeze(signal_noise);
-%%
 save('all_modulations.mat')
-%%
-%save('BPSK_ltd_rnd_phases.mat','signal_bpsk')
-%save('QPSK_ltd_rnd_phases.mat','signal_qpsk')
-%save('PSK8_ltd_rnd_phases.mat','signal_8psk')
-%save('QAM16_ltd_rnd_phases.mat','signal_qam16')
-%save('QAM64_ltd_rnd_phases.mat','signal_qam64')
-%save('noise.mat','signal_noise')

@@ -16,12 +16,12 @@ snrVector = -10:2:20;                          % SNR array
 % Main config
 symbolRate = 100000;                           % Symbol rate
 numSamplesPerSymbol = 8;                       % Oversampling factor
-frames = 500;                                 % Number of frames
+frames = 10;                                 % Number of frames
 frameSize = 2048 / numSamplesPerSymbol;        % Frame size in bits
 
 % Modulation parameters
 modParameters = struct(...
-    'RP', 0, ... % Activade variable initial phase / Random phase
+    'RP', 1, ... % Activade variable initial phase / Random phase
     'RA', 0, ... % Activade variable initial amplitude / Random amplitude
     'CN', 1, ... % Activate channel noise
     'isPlot', 0);% Activate modulation plot (scatterplot + spectrum)            
