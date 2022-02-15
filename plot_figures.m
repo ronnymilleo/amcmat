@@ -3,7 +3,9 @@
 % Programa de Pos-Graduacao em Engenharia Eletrica
 % Ronny Milléo
 % Adenilson Castro
-% Atualizado 19/10/2021
+% Updated 15/02/2022
+% This plot script will show only the higher SNR signals
+% It is recommended to simulate just one frame to keep the graphics clean
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% BPSK
 figure(1)

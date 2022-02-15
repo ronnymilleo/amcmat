@@ -1,22 +1,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Universidade Federal do Parana
 % Programa de Pos-Graduacao em Engenharia Eletrica
-% Ronny Milléo
+% Ronny Milleo
 % Adenilson Castro
-% Atualizado 19/10/2021
+% Updated 15/02/2022
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear
 clc
 %% Initial values
 % Main vectors
+% Using single to maintain 32 bit floats
+% Default is -10 dB to 20 dB
 snrArray = single(-10:2:20);
 
 % Main config
+% Symbol rate can be any number
 symbolRate = 100000;
 numSamplesPerSymbol = 8;
-numFrames = 1000;
+numFrames = 1;
+% Every frame is created using a random initial phase
 phase = single(randn(1,numFrames));
+% Keep all frames with the same number of samples
 frameSize = 2048 / numSamplesPerSymbol;
+% Modulations
 M = [2 4 8 16 64];
 
 % Preallocation
@@ -85,5 +91,5 @@ for j = 1:length(snrArray) % SNR loop
         signal_noise(j, k, :) = wgn(frameSize*numSamplesPerSymbol,1,0,'dBW','complex');
     end
 end
-%%
+%% Save everything to a mat file to be loaded into the python script
 save('all_modulations.mat')
